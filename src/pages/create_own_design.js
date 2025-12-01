@@ -14,7 +14,7 @@ const CreateOwnDesign = () => {
   const router = useRouter();
   const { addItem } = useCart();
   const { currency } = useUtilsFunction();
-  
+
   const [uploadedImage, setUploadedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [selectedShape, setSelectedShape] = useState("Square");
@@ -113,7 +113,7 @@ const CreateOwnDesign = () => {
 
     addItem(customProduct, quantity);
     notifySuccess("Custom sticker added to cart!");
-    
+
     setTimeout(() => {
       router.push("/");
     }, 1500);
@@ -126,7 +126,10 @@ const CreateOwnDesign = () => {
 
   if (loading) {
     return (
-      <Layout title="Create Your Own Sticker" description="Design custom stickers">
+      <Layout
+        title="Create Your Own Sticker"
+        description="Design custom stickers"
+      >
         <div className="min-h-screen flex items-center justify-center">
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-yellow-400 border-t-transparent"></div>
         </div>
@@ -322,7 +325,9 @@ const CreateOwnDesign = () => {
                         <div className="w-48 h-48 mx-auto bg-gray-200 rounded-xl flex items-center justify-center mb-4">
                           <span className="text-6xl">🖼️</span>
                         </div>
-                        <p className="font-medium">Upload an image to preview</p>
+                        <p className="font-medium">
+                          Upload an image to preview
+                        </p>
                       </div>
                     )}
                   </div>
@@ -375,3 +380,5 @@ const CreateOwnDesign = () => {
 };
 
 export default dynamic(() => Promise.resolve(CreateOwnDesign), { ssr: false });
+
+// This is create your own design page for custom stickers where users can upload an image, select shape and size, and add the custom sticker to their cart.
