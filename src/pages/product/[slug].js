@@ -31,6 +31,7 @@ import SizeVariantSelector from "@components/variants/SizeVariantSelector";
 import { SidebarContext } from "@context/SidebarContext";
 import AttributeServices from "@services/AttributeServices";
 import ProductServices from "@services/ProductServices";
+import CustomProductServices from "@services/CustomProductServices";
 import useUtilsFunction from "@hooks/useUtilsFunction";
 import Discount from "@components/common/Discount";
 import ImageZoom from "@components/image-zoom/ImageZoom";
@@ -63,8 +64,22 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedTier, setSelectedTier] = useState(null);
   const [hasSizeVariants, setHasSizeVariants] = useState(false);
+  const [customStickerEnabled, setCustomStickerEnabled] = useState(false);
 
   const productImages = product?.image || [];
+
+  // Check if custom sticker feature is enabled
+  useEffect(() => {
+    const fetchCustomProductSettings = async () => {
+      try {
+        const settings = await CustomProductServices.getCustomProductSettings();
+        setCustomStickerEnabled(settings?.featureEnabled || false);
+      } catch (error) {
+        console.error("Error fetching custom product settings:", error);
+      }
+    };
+    fetchCustomProductSettings();
+  }, []);
 
   const calculateProductPricing = (productData) => {
     const priceValue = getNumber(productData?.price);
@@ -507,6 +522,15 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
     </button>
   );
 
+  const CreateYourOwnStickerButton = () => (
+    <button
+      onClick={() => router.push("/create_own_design")}
+      className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-bold text-center justify-center border-0 border-transparent rounded-lg focus-visible:outline-none focus:outline-none px-4 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 w-full h-12 shadow-lg hover:shadow-xl mt-3"
+    >
+      🎨 CLICK TO CREATE YOUR OWN STICKER
+    </button>
+  );
+
   const CategoryLink = () => (
     <Link
       href={`/search?category=${category_name}&_id=${product?.category?._id}`}
@@ -693,6 +717,12 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
                               <AddToCartButton />
                             </div>
                           </div>
+
+                          {customStickerEnabled && (
+                            <div className="mt-3">
+                              <CreateYourOwnStickerButton />
+                            </div>
+                          )}
 
                           <div className="flex flex-col mt-6">
                             <span className="font-serif font-semibold py-1 text-sm d-block">
