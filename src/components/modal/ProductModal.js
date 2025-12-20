@@ -105,18 +105,48 @@ const ProductModal = ({
       );
 
       setVariants(result);
-      setStock(product.variants[0]?.quantity);
+
+      // Use same logic as ProductCard for pricing
+      const initialSizeVariants = (product?.variants || []).filter(
+        (v) => v.variantType === "size"
+      );
+
+      let derivedPrice = 0;
+      let derivedOriginalPrice = 0;
+
+      if (initialSizeVariants.length > 0) {
+        const firstSize = initialSizeVariants[0];
+        const firstTier =
+          firstSize?.pricingTiers && firstSize.pricingTiers.length
+            ? firstSize.pricingTiers[0]
+            : null;
+
+        if (firstTier) {
+          derivedPrice = getNumber(firstTier.finalPrice);
+          derivedOriginalPrice = getNumber(firstTier.basePrice);
+        } else {
+          derivedPrice = getNumber(product?.prices?.price);
+          derivedOriginalPrice = getNumber(product?.prices?.originalPrice);
+        }
+      } else if (product?.isCombination && product?.variants?.length > 0) {
+        derivedPrice = getNumber(product.variants[0]?.price);
+        derivedOriginalPrice = getNumber(product.variants[0]?.originalPrice);
+      } else {
+        derivedPrice = getNumber(product?.prices?.price);
+        derivedOriginalPrice = getNumber(product?.prices?.originalPrice);
+      }
+
+      setStock(product.variants[0]?.quantity || product?.stock);
       setSelectVariant(product.variants[0]);
       setSelectVa(product.variants[0]);
-      setImg(product.variants[0]?.image);
-      const price = getNumber(product.variants[0]?.price);
-      const originalPrice = getNumber(product.variants[0]?.originalPrice);
+      setImg(product.variants[0]?.image || product?.image[0]);
+
       const discountPercentage = getNumber(
-        ((originalPrice - price) / originalPrice) * 100
+        ((derivedOriginalPrice - derivedPrice) / derivedOriginalPrice) * 100
       );
       setDiscount(getNumber(discountPercentage));
-      setPrice(price);
-      setOriginalPrice(originalPrice);
+      setPrice(derivedPrice);
+      setOriginalPrice(derivedOriginalPrice);
     } else {
       setStock(product?.stock);
       setImg(product?.image[0]);
@@ -297,38 +327,13 @@ const ProductModal = ({
               </div>
 
               <div className="flex items-center mt-4">
-                <div className="flex items-center justify-between space-s-3 sm:space-s-4 w-full">
-                  <div className="group flex items-center justify-between rounded-md overflow-hidden flex-shrink-0 border h-11 md:h-12 border-gray-300">
-                    <button
-                      onClick={() => setItem(item - 1)}
-                      disabled={item === 1}
-                      className="flex items-center justify-center flex-shrink-0 h-full transition ease-in-out duration-300 focus:outline-none w-8 md:w-12 text-heading border-e border-gray-300 hover:text-gray-500"
-                    >
-                      <span className="text-dark text-base">
-                        <FiMinus />
-                      </span>
-                    </button>
-                    <p className="font-semibold flex items-center justify-center h-full  transition-colors duration-250 ease-in-out cursor-default flex-shrink-0 text-base text-heading w-8  md:w-20 xl:w-24">
-                      {item}
-                    </p>
-                    <button
-                      onClick={() => setItem(item + 1)}
-                      disabled={
-                        product.quantity < item || product.quantity === item
-                      }
-                      className="flex items-center justify-center h-full flex-shrink-0 transition ease-in-out duration-300 focus:outline-none w-8 md:w-12 text-heading border-s border-gray-300 hover:text-gray-500"
-                    >
-                      <span className="text-dark text-base">
-                        <FiPlus />
-                      </span>
-                    </button>
-                  </div>
+                <div className="flex items-center justify-center w-full">
                   <button
-                    onClick={() => handleAddToCart(product)}
+                    onClick={() => handleMoreInfo(product.slug)}
                     disabled={product.quantity < 1}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-black text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold text-center justify-center border-0 border-transparent rounded-lg focus-visible:outline-none focus:outline-none px-4 ml-4 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 w-full h-12 shadow-md hover:shadow-lg"
+                    className="bg-yellow-500 hover:bg-yellow-600 text-black text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold text-center justify-center border-0 border-transparent rounded-lg focus-visible:outline-none focus:outline-none px-4 md:px-6 lg:px-8 py-4 md:py-3.5 lg:py-4 w-full h-12 shadow-md hover:shadow-lg"
                   >
-                    {t("common:addToCart")}
+                    Continue
                   </button>
                 </div>
               </div>

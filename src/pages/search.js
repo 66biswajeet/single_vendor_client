@@ -4,7 +4,6 @@ import useTranslation from "next-translate/useTranslation";
 
 import Layout from "@layout/Layout";
 import useFilter from "@hooks/useFilter";
-import Card from "@components/cta-card/Card";
 import Loading from "@components/preloader/Loading";
 import ProductServices from "@services/ProductServices";
 import ProductCard from "@components/product/ProductCard";
@@ -39,10 +38,6 @@ const Search = ({ products, attributes }) => {
         />
 
         <div className="flex-1 max-w-screen-2xl mx-auto px-3 sm:px-10 py-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 2xl:gap-6 mb-6">
-            <Card />
-          </div>
-
           {productData?.length > 0 && (
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-yellow-50 border border-gray-300 rounded-lg p-3 mb-6">
               <div>

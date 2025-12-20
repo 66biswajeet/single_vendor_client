@@ -20,7 +20,6 @@ import useUtilsFunction from "@hooks/useUtilsFunction";
 import ProductModal from "@components/modal/ProductModal";
 import ImageWithFallback from "@components/common/ImageWithFallBack";
 import { handleLogEvent } from "src/lib/analytics";
-import RenderStars from "@components/common/RatingStars";
 
 const ProductCard = ({ product, attributes }) => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -299,16 +298,10 @@ const ProductCard = ({ product, attributes }) => {
           </Link>
 
           {productDescription && (
-            <p className="text-xs text-gray-600 line-clamp-1 mb-1.5 leading-4">
+            <p className="text-xs text-gray-600 line-clamp-1 mb-3 leading-4">
               {productDescription}
             </p>
           )}
-
-          {/* Rating */}
-          <div className="flex items-center gap-1 mb-2">
-            <RenderStars rating={5} />
-            <span className="text-xs text-gray-500 ml-0.5">(121)</span>
-          </div>
 
           {/* Price */}
           <div className="mb-3 flex items-center gap-2">
@@ -324,38 +317,13 @@ const ProductCard = ({ product, attributes }) => {
             )}
           </div>
 
-          {/* Add to Cart Button */}
-          {isInCart && cartItem ? (
-            <div className="w-full bg-black text-white flex items-center justify-between h-9 px-3 rounded-full border-2 border-black hover:border-yellow-500 transition-all shadow-sm">
-              <button
-                onClick={handleDecreaseProductQuantity}
-                disabled={isOutOfStock}
-                className="hover:bg-yellow-500 hover:text-black rounded-full p-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
-                aria-label="Decrease quantity"
-              >
-                <IoRemove size={16} />
-              </button>
-              <span className="text-sm font-semibold min-w-[1.5rem] text-center">
-                {cartItem?.quantity || 0}
-              </span>
-              <button
-                onClick={handleIncreaseProductQuantity}
-                disabled={isOutOfStock}
-                className="hover:bg-yellow-500 hover:text-black rounded-full p-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95"
-                aria-label="Increase quantity"
-              >
-                <IoAdd size={16} />
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={handleAddCurrentProductToCart}
-              disabled={isOutOfStock}
-              className="w-full bg-yellow-400 border-2 border-yellow-500 text-black py-2 px-3 rounded-full font-semibold text-xs hover:bg-yellow-500 transition-all duration-200 flex items-center justify-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-yellow-400 active:scale-[0.98] shadow-sm hover:shadow-md"
-            >
-              Add to Cart
-            </button>
-          )}
+          {/* Shop Now Button */}
+          <Link
+            href={`/product/${product?.slug}`}
+            className="w-full bg-yellow-400 border-2 border-yellow-500 text-black py-2 px-3 rounded-full font-semibold text-xs hover:bg-yellow-500 transition-all duration-200 flex items-center justify-center gap-1.5 active:scale-[0.98] shadow-sm hover:shadow-md"
+          >
+            Shop Now
+          </Link>
         </div>
       </div>
     </>

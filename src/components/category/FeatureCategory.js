@@ -64,7 +64,7 @@ const FeatureCategory = () => {
         className="!w-auto flex flex-col items-center cursor-pointer"
         onClick={onClickSlide}
       >
-        <div className="w-36 h-36 rounded-full flex items-center justify-center bg-white shadow-md hover:shadow-xl transition-all">
+        <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 rounded-full flex items-center justify-center bg-white shadow-md hover:shadow-xl transition-all">
           <Image
             src={
               cat.icon ||
@@ -73,10 +73,10 @@ const FeatureCategory = () => {
             width={110}
             height={110}
             alt={name}
-            className="object-contain"
+            className="object-contain w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28"
           />
         </div>
-        <p className="text-sm text-center mt-3 font-semibold line-clamp-2">
+        <p className="text-xs sm:text-sm text-center mt-2 sm:mt-3 font-semibold line-clamp-2">
           {name}
         </p>
       </SwiperSlide>
@@ -92,20 +92,6 @@ const FeatureCategory = () => {
   return (
     <div className="relative pb-10 px-4">
       <div className="max-w-screen-2xl mx-auto relative">
-        <button
-          onClick={handlePrevClick}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-md hover:shadow-lg transition-all"
-        >
-          <FiChevronLeft className="w-6 h-6 text-gray-700" />
-        </button>
-
-        <button
-          onClick={handleNextClick}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-md hover:shadow-lg transition-all"
-        >
-          <FiChevronRight className="w-6 h-6 text-gray-700" />
-        </button>
-
         <div onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
           <Swiper
             onSwiper={(swiper) => {

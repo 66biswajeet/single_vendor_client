@@ -2,6 +2,7 @@ import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import React, { useEffect, useState, useCallback } from "react";
 import { FiUser, FiMapPin, FiPhone, FiMail, FiCamera } from "react-icons/fi";
+import { useRouter, useSearchParams } from "next/navigation";
 
 //internal import
 import Label from "@components/form/Label";
@@ -17,8 +18,10 @@ import useUtilsFunction from "@hooks/useUtilsFunction";
 const UpdateProfile = () => {
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isDemoMode] = useState(true);
   const { data: session, update } = useSession();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const fromPhoneAuth = searchParams?.get("fromPhoneAuth") === "true";
 
   const { storeCustomizationSetting } = useGetSetting();
   const { showingTranslateValue } = useUtilsFunction();
@@ -56,11 +59,6 @@ const UpdateProfile = () => {
   }, [initializeForm]);
 
   const onSubmit = async (data) => {
-    if (isDemoMode) {
-      notifySuccess("Profile update simulated successfully! (Demo mode)");
-      return;
-    }
-
     if (loading) return;
     setLoading(true);
 
@@ -78,15 +76,23 @@ const UpdateProfile = () => {
         userData
       );
 
+      // Update session with new data including the new token
       await update({
         ...session,
         user: {
           ...session.user,
-          ...userData,
+          ...res,
         },
       });
 
-      notifySuccess("Profile Update Successfully!");
+      notifySuccess("Profile Updated Successfully!");
+
+      // If redirected from phone auth, navigate to dashboard after successful update
+      if (fromPhoneAuth) {
+        setTimeout(() => {
+          router.push("/user/dashboard");
+        }, 1000);
+      }
     } catch (error) {
       notifyError(
         error?.response?.data?.message || error?.message || "Update failed"
@@ -104,7 +110,17 @@ const UpdateProfile = () => {
         message: "Name must be at least 2 characters",
       },
     },
+    address: {
+      required: fromPhoneAuth ? "Address is required" : false,
+      minLength: fromPhoneAuth
+        ? {
+            value: 5,
+            message: "Address must be at least 5 characters",
+          }
+        : undefined,
+    },
     phone: {
+      required: fromPhoneAuth ? "Phone number is required" : false,
       pattern: {
         value: /^[+]?[\d\s-()]+$/,
         message: "Invalid phone number",
@@ -124,16 +140,6 @@ const UpdateProfile = () => {
       <div className="mx-auto max-w-screen-2xl px-3 sm:px-10">
         <div className="py-4 flex flex-col lg:flex-row w-full">
           <div className="w-full">
-            {/* Demo Mode Banner */}
-            {isDemoMode && (
-              <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                <p className="text-sm text-gray-600">
-                  <strong>Demo Mode:</strong> Profile updates are simulated for
-                  demonstration purposes.
-                </p>
-              </div>
-            )}
-
             <div className="mx-auto text-left w-full max-w-4xl px-4 py-8 sm:p-10 overflow-hidden transition-all transform bg-white shadow-xl rounded-2xl">
               <div className="overflow-hidden mx-auto">
                 <div className="text-center mb-8">
@@ -141,8 +147,18 @@ const UpdateProfile = () => {
                     Update Profile
                   </h2>
                   <p className="text-sm md:text-base text-gray-600 mt-2">
-                    Manage your personal information
+                    {fromPhoneAuth
+                      ? "Please complete your profile to continue"
+                      : "Manage your personal information"}
                   </p>
+                  {fromPhoneAuth && (
+                    <div className="mt-3 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                      <p className="text-xs text-gray-700">
+                        <strong>Required:</strong> Please fill in all mandatory
+                        fields (*) to complete your profile setup.
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 <form
@@ -173,7 +189,11 @@ const UpdateProfile = () => {
                       <div className="form-group">
                         <InputArea
                           register={register}
-                          label="Full Name"
+                          label={
+                            <>
+                              Full Name <span className="text-red-500">*</span>
+                            </>
+                          }
                           name="name"
                           type="text"
                           placeholder="Enter your full name"
@@ -205,7 +225,14 @@ const UpdateProfile = () => {
                       <div className="form-group">
                         <InputArea
                           register={register}
-                          label="Phone Number"
+                          label={
+                            <>
+                              Phone Number{" "}
+                              {fromPhoneAuth && (
+                                <span className="text-red-500">*</span>
+                              )}
+                            </>
+                          }
                           name="phone"
                           type="tel"
                           placeholder="Your phone number"
@@ -220,11 +247,19 @@ const UpdateProfile = () => {
                       <div className="form-group md:col-span-2">
                         <InputArea
                           register={register}
-                          label="Address"
+                          label={
+                            <>
+                              Address{" "}
+                              {fromPhoneAuth && (
+                                <span className="text-red-500">*</span>
+                              )}
+                            </>
+                          }
                           name="address"
                           type="text"
                           placeholder="Your complete address"
                           Icon={FiMapPin}
+                          validation={validationRules.address}
                           disabled={loading}
                         />
                         <Error errorName={errors.address} />

@@ -129,31 +129,28 @@ const MainCarousel = () => {
         {sliderData?.map((item, i) => {
           return (
             <SwiperSlide
-              className="h-full w-full relative rounded-2xl overflow-hidden"
+              className="h-full w-full relative rounded-lg overflow-hidden"
               key={i + 1}
             >
-              <div className="relative w-full h-96 sm:h-[28rem] md:h-[32rem] lg:h-[36rem]">
+              <div className="relative w-full h-48 sm:h-56 md:h-64 lg:h-72">
                 <Image
                   src={item.image || "/slider/slider-1.jpg"}
                   alt={item.title}
-                  width={800}
+                  width={1200}
                   height={400}
-                  className="object-cover w-full h-96 sm:h-[28rem] md:h-[32rem] lg:h-[36rem]"
+                  className="object-cover w-full h-full"
                   priority
                 />
-                <div className="absolute inset-0 bg-black bg-opacity-0"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent"></div>
               </div>
-              <div className="absolute top-0 left-0 z-10 p-r-16 flex-col flex w-full h-full place-items-start justify-center">
-                <div className="pl-4 pr-12 sm:pl-10 sm:pr-16 w-10/12 lg:w-8/12 xl:w-7/12">
-                  <h1 className="mb-2 font-serif text-xl sm:text-lg md:text-2xl line-clamp-1 md:line-clamp-none  lg:line-clamp-none  lg:text-5xl font-bold text-black sticker-text-outline">
+              <div className="absolute top-0 left-0 z-10 flex-col flex w-full h-full place-items-start justify-center">
+                <div className="pl-4 pr-8 sm:pl-6 sm:pr-12 md:pl-8 md:pr-16 lg:pl-12 w-full sm:w-9/12 md:w-8/12 lg:w-7/12">
+                  <h1 className="mb-2 sm:mb-3 font-serif text-base sm:text-lg md:text-xl lg:text-3xl xl:text-4xl font-bold text-white drop-shadow-lg line-clamp-2">
                     {item.title}
                   </h1>
-                  {/* <p className="text-base leading-6 text-gray-800 font-sans line-clamp-1  md:line-clamp-none lg:line-clamp-none sticker-text-outline">
-                    {item.info}
-                  </p> */}
                   <Link
                     href={item.url}
-                    className="hidden sm:inline-block lg:inline-block text-sm leading-6 font-semibold mt-6 px-8 py-3 bg-yellow-400 text-center rounded-full text-black hover:bg-yellow-500 hover:shadow-lg transition-all border-2 border-yellow-500 active:scale-95"
+                    className="inline-block text-xs sm:text-sm font-semibold mt-2 sm:mt-3 md:mt-4 px-4 py-2 sm:px-6 sm:py-2.5 md:px-8 md:py-3 bg-yellow-400 text-center rounded-full text-black hover:bg-yellow-500 hover:shadow-lg transition-all border-2 border-yellow-500 active:scale-95"
                   >
                     {item.buttonName}
                   </Link>

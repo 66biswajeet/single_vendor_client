@@ -171,7 +171,7 @@ const Navbar = () => {
 
     return (
       <Link
-        href="/auth/login"
+        href="/auth/phone-signin"
         className="flex items-center space-x-3 text-yellow-400 hover:text-yellow-500 transition-all"
         onClick={handleMobileLinkClick}
       >
@@ -224,7 +224,7 @@ const Navbar = () => {
 
     return (
       <Link
-        href="/auth/login"
+        href="/auth/phone-signin"
         className="flex items-center space-x-2 px-4 py-2 rounded-full bg-yellow-400 hover:bg-yellow-500 text-black font-semibold transition-all hover:scale-105 active:scale-95"
       >
         <FiUser className="w-5 h-5" />

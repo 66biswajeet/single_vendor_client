@@ -275,47 +275,63 @@ const Checkout = () => {
                     </div>
 
                     {shippingRates.length > 0 && (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                      <div className="space-y-3 mb-6">
                         {shippingRates.map((rate, index) => (
-                          <div
+                          <label
                             key={index}
-                            onClick={() => handleShippingRateSelection(rate)}
-                            className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                              selectedShippingRate === rate
-                                ? "border-yellow-500 bg-yellow-50"
-                                : "border-gray-300 hover:border-gray-400"
-                            }`}
+                            className="flex items-start p-3 border-2 rounded-lg cursor-pointer transition-all hover:bg-gray-50"
+                            style={{
+                              borderColor:
+                                selectedShippingRate === rate
+                                  ? "#fbbf24"
+                                  : "#d1d5db",
+                              backgroundColor:
+                                selectedShippingRate === rate
+                                  ? "#fffbeb"
+                                  : "#ffffff",
+                            }}
                           >
-                            <div className="flex justify-between items-start mb-2">
-                              <h4 className="font-semibold text-gray-900">
-                                {rate.postage_type ||
-                                  rate.serviceName ||
-                                  rate.service ||
-                                  "Standard Shipping"}
-                              </h4>
-                              <span className="font-bold text-lg">
-                                {rate.currency || currency}
-                                {(
-                                  rate.total ||
-                                  rate.rate ||
-                                  rate.cost ||
-                                  0
-                                ).toFixed(2)}
-                              </span>
-                            </div>
-                            <p className="text-sm text-gray-600 mb-1">
-                              {rate.package_type ||
-                                rate.description ||
-                                "Reliable shipping service"}
-                            </p>
-                            {(rate.delivery_days || rate.estimatedDelivery) && (
-                              <p className="text-xs text-gray-500">
-                                Est. Delivery:{" "}
-                                {rate.delivery_days || rate.estimatedDelivery}{" "}
-                                days
+                            <input
+                              type="radio"
+                              name="shipping-rate"
+                              value={index}
+                              checked={selectedShippingRate === rate}
+                              onChange={() => handleShippingRateSelection(rate)}
+                              className="mt-1 mr-3 h-4 w-4 cursor-pointer accent-yellow-500"
+                            />
+                            <div className="flex-1 min-w-0">
+                              <div className="flex justify-between items-start mb-1">
+                                <h4 className="font-semibold text-gray-900 text-sm">
+                                  {rate.postage_type ||
+                                    rate.serviceName ||
+                                    rate.service ||
+                                    "Standard Shipping"}
+                                </h4>
+                                <span className="font-bold text-sm ml-2 flex-shrink-0">
+                                  {rate.currency || currency}
+                                  {(
+                                    rate.total ||
+                                    rate.rate ||
+                                    rate.cost ||
+                                    0
+                                  ).toFixed(2)}
+                                </span>
+                              </div>
+                              <p className="text-xs text-gray-600 mb-1">
+                                {rate.package_type ||
+                                  rate.description ||
+                                  "Reliable shipping service"}
                               </p>
-                            )}
-                          </div>
+                              {(rate.delivery_days ||
+                                rate.estimatedDelivery) && (
+                                <p className="text-xs text-gray-500">
+                                  Est. Delivery:{" "}
+                                  {rate.delivery_days || rate.estimatedDelivery}{" "}
+                                  days
+                                </p>
+                              )}
+                            </div>
+                          </label>
                         ))}
                       </div>
                     )}

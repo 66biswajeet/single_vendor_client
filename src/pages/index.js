@@ -80,7 +80,7 @@ const Home = ({ popularProducts, discountProducts, attributes }) => {
             </div>
 
             {storeCustomizationSetting?.home?.promotion_banner_status && (
-              <div className="bg-yellow-50 border-2 border-yellow-400 px-10 py-6 rounded-2xl mt-6">
+              <div className="bg-yellow-50 border-2 border-yellow-400 px-4 py-4 sm:px-6 sm:py-5 lg:px-10 lg:py-6 rounded-xl sm:rounded-2xl mt-4 sm:mt-6">
                 <Banner />
               </div>
             )}

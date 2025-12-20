@@ -154,8 +154,18 @@ const PhoneSignin = () => {
         notifyError(signInResult.error);
       } else if (signInResult?.ok) {
         notifySuccess("Successfully signed in!");
-        const url = redirectUrl ? "/checkout" : "/user/dashboard";
-        router.push(url);
+
+        // Check if user profile is incomplete (name or address missing)
+        const isProfileIncomplete = !response.name || !response.address;
+
+        if (isProfileIncomplete) {
+          // Redirect to update profile if profile is incomplete
+          router.push("/user/update-profile?fromPhoneAuth=true");
+        } else {
+          // Redirect to intended page if profile is complete
+          const url = redirectUrl ? "/checkout" : "/user/dashboard";
+          router.push(url);
+        }
       }
     } catch (error) {
       console.error("Error verifying OTP:", error);
