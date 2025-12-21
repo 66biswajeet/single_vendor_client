@@ -370,14 +370,6 @@ const ProductModal = ({
                   </div>
                 </div>
               </div>
-              <div className="flex justify-end mt-2">
-                <p className="text-xs sm:text-sm text-gray-600">
-                  Call Us To Order By Mobile Number :{" "}
-                  <span className="text-emerald-700 font-semibold">
-                    +0044235234
-                  </span>{" "}
-                </p>
-              </div>
             </div>
           </div>
         </div>

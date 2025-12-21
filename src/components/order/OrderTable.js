@@ -120,6 +120,9 @@ const OrderTable = ({ data, currency }) => {
           <td className="px-6 py-1 whitespace-nowrap font-bold text-center">
             {item.quantity}{" "}
           </td>
+          <td className="px-6 py-1 whitespace-nowrap text-center text-gray-600">
+            {item.customData?.selectedSize || item.selectedSize || "-"}
+          </td>
           <td className="px-6 py-1 whitespace-nowrap font-bold text-center font-DejaVu">
             {currency}
             {getNumberTwo(item.price)}

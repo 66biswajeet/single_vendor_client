@@ -391,6 +391,60 @@ const useCheckoutSubmit = (storeSetting) => {
 
     setIsLoadingRates(true);
     try {
+      // Split large quantities into multiple parcels for Stallion API compatibility
+      // Stallion has issues with very large quantities (500+) in single parcel
+      const MAX_ITEMS_PER_PARCEL = 500;
+
+      const parcels = [];
+      items.forEach((item, idx) => {
+        const quantity = item.quantity || 1;
+        // Weight is per-item in GRAMS - convert to kg (1g = 0.001kg)
+        // If product doesn't have weight, assume 1 gram per item (extremely light)
+        const itemWeightInGrams = item.weight || 1; // 1 gram per item as default
+        const itemWeightInKg = itemWeightInGrams / 1000; // Convert to kg
+        const itemLength = item.length || 10;
+        const itemWidth = item.width || 10;
+        const itemHeight = item.height || 5;
+
+        console.log(`Item ${idx}:`, {
+          title: item.title || item.name,
+          quantity: quantity,
+          weightPerItem_grams: itemWeightInGrams,
+          weightPerItem_kg: itemWeightInKg,
+          isCustomProduct: item.isCustomProduct || false,
+        });
+
+        // If quantity exceeds limit, split into multiple parcels
+        if (quantity > MAX_ITEMS_PER_PARCEL) {
+          const numParcels = Math.ceil(quantity / MAX_ITEMS_PER_PARCEL);
+          const baseQuantity = Math.floor(quantity / numParcels);
+          const remainder = quantity % numParcels;
+
+          for (let i = 0; i < numParcels; i++) {
+            const parcelQuantity =
+              i < remainder ? baseQuantity + 1 : baseQuantity;
+            parcels.push({
+              weight: itemWeightInKg,
+              length: itemLength,
+              width: itemWidth,
+              height: itemHeight,
+              quantity: parcelQuantity,
+            });
+          }
+          console.log(
+            `Split item into ${numParcels} parcels of max ${MAX_ITEMS_PER_PARCEL} items each`
+          );
+        } else {
+          parcels.push({
+            weight: itemWeightInKg,
+            length: itemLength,
+            width: itemWidth,
+            height: itemHeight,
+            quantity: quantity,
+          });
+        }
+      });
+
       const ratePayload = {
         destination: {
           name: destination.name || "Customer",
@@ -401,35 +455,66 @@ const useCheckoutSubmit = (storeSetting) => {
           postalCode: destination.zipCode,
           country: destination.country,
         },
-        parcels: items.map((item) => ({
-          weight: item.weight || 0.5,
-          length: item.length || 10,
-          width: item.width || 10,
-          height: item.height || 5,
-          quantity: item.quantity || 1,
-        })),
+        parcels: parcels,
       };
 
+      console.log("=== SHIPPING RATE REQUEST ===");
+      console.log("Total Parcels:", parcels.length);
+      console.log("Payload:", JSON.stringify(ratePayload, null, 2));
+
       const response = await ShippingServices.getRates(ratePayload);
+
+      console.log("=== SHIPPING RATE RESPONSE ===");
+      console.log("Full response:", response);
+      console.log("Response.success:", response.success);
+      console.log("Response.rates:", response.rates);
+      console.log("Response.message:", response.message);
+      console.log("Response.error:", response.error);
 
       if (response.success && response.rates) {
         // Extract rates array from nested structure
         const ratesArray = response.rates.rates || response.rates;
+        console.log("Extracted ratesArray:", ratesArray);
+        console.log("Number of available rates:", ratesArray?.length || 0);
+
         setShippingRates(ratesArray);
 
         // Auto-select cheapest rate
-        if (ratesArray.length > 0) {
+        if (ratesArray && ratesArray.length > 0) {
           const cheapest = ratesArray.reduce((prev, curr) =>
             (prev.total || prev.rate || prev.cost) <
             (curr.total || curr.rate || curr.cost)
               ? prev
               : curr
           );
+          console.log("Selected cheapest rate:", cheapest);
           setSelectedShippingRate(cheapest);
           setShippingCost(
             Number(cheapest.total || cheapest.rate || cheapest.cost || 0)
           );
+        } else {
+          console.warn(
+            "Rates array is empty. Possible reasons:",
+            "1. Stallion API has no carriers for this route",
+            "2. Invalid shipping address",
+            "3. Warehouse address not configured"
+          );
+          setShippingRates([]);
+          notifyError(
+            "No shipping rates available for this address. Please check your destination."
+          );
         }
+      } else {
+        console.error("Response success false or rates missing:", {
+          success: response.success,
+          hasRates: !!response.rates,
+          message: response.message,
+          error: response.error,
+        });
+        setShippingRates([]);
+        notifyError(
+          response.error || response.message || "No shipping rates available"
+        );
       }
     } catch (error) {
       console.error("Failed to fetch shipping rates:", error);

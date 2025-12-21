@@ -21,9 +21,8 @@ const Cart = () => {
       return;
     }
 
-
     if (!userInfo) {
-      router.push(`/auth/login?redirectUrl=checkout`);
+      router.push(`/auth/phone-signin?redirectUrl=checkout`);
       closeCartDrawer();
     } else {
       router.push("/checkout");
@@ -97,9 +96,7 @@ const Cart = () => {
           <div className="px-6 py-4">
             <div className="mb-4">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-base text-gray-600">
-                  Subtotal
-                </span>
+                <span className="text-base text-gray-600">Subtotal</span>
                 <span className="font-semibold text-black">
                   {currency}
                   {displayTotal}

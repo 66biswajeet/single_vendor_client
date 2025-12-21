@@ -344,6 +344,11 @@ const InvoiceForDownload = ({
               </View>
               <View style={styles.tableCol}>
                 <Text style={styles.tableCell}>
+                  <Text style={styles.header}>Selected Size</Text>
+                </Text>
+              </View>
+              <View style={styles.tableCol}>
+                <Text style={styles.tableCell}>
                   <Text style={styles.header}>Item Price</Text>
                 </Text>
               </View>
@@ -367,6 +372,16 @@ const InvoiceForDownload = ({
                   <Text style={styles.tableCell}>
                     {" "}
                     <Text style={styles.quantity}>{item.quantity}</Text>{" "}
+                  </Text>
+                </View>
+                <View style={styles.tableCol}>
+                  <Text style={styles.tableCell}>
+                    {" "}
+                    <Text style={styles.quantity}>
+                      {item.customData?.selectedSize ||
+                        item.selectedSize ||
+                        "-"}
+                    </Text>{" "}
                   </Text>
                 </View>
                 <View style={styles.tableCol}>

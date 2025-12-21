@@ -218,6 +218,13 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
         },
         price: getNumber(selectedTier.finalPrice),
         originalPrice: getNumber(selectedTier.basePrice),
+        // Shipping data: weight should be in GRAMS (will be converted to kg in checkout)
+        // Default to 2 grams per sticker if not specified
+        weight: product.weight || 2,
+        length: product.length || 10,
+        width: product.width || 10,
+        height: product.height || 5,
+        quantity: selectedTier.quantity,
       };
 
       handleAddItem(newItem);
@@ -725,20 +732,6 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
                         </div>
 
                         <div className="mb-6">
-                          {hasSizeVariants ? (
-                            <SizeVariantSelector
-                              sizeVariants={sizeVariants}
-                              selectedSize={selectedSize}
-                              selectedTier={selectedTier}
-                              onSizeChange={handleSizeChange}
-                              onTierChange={handleTierChange}
-                            />
-                          ) : (
-                            variantAttributeSections
-                          )}
-                        </div>
-
-                        <div>
                           <div className="text-sm leading-4 text-gray-700 ">
                             {isReadMore && shouldShowReadMore
                               ? `${productDescription.slice(0, 230)}...`
@@ -746,6 +739,25 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
 
                             {shouldShowReadMore && <ReadMoreButton />}
                           </div>
+                        </div>
+
+                        <div className="mb-6">
+                          {hasSizeVariants ? (
+                            <SizeVariantSelector
+                              sizeVariants={sizeVariants}
+                              selectedSize={selectedSize}
+                              selectedTier={selectedTier}
+                              onSizeChange={handleSizeChange}
+                              onTierChange={handleTierChange}
+                              onContinue={handleAddToCart}
+                            />
+                          ) : (
+                            variantAttributeSections
+                          )}
+                        </div>
+
+                        <div>
+                          <div className="text-sm leading-4 text-gray-700 "></div>
 
                           {customStickerEnabled && (
                             <div className="mt-6">
@@ -763,15 +775,6 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
                             <Tags product={product} />
                           </div>
 
-                          <div className="mt-6 p-4 bg-yellow-50 border border-yellow-400 rounded-lg">
-                            <p className="text-sm text-gray-800 font-medium">
-                              Call Us To Order By Mobile Number :{" "}
-                              <span className="text-yellow-600 font-semibold">
-                                +0044235234
-                              </span>
-                            </p>
-                          </div>
-
                           <div className="mt-6">
                             <h3 className="text-base font-semibold mb-2 font-serif text-black">
                               {t("common:shareYourSocial")}
@@ -786,11 +789,7 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
                         </div>
                       </div>
 
-                      <div className="w-full xl:w-5/12 lg:w-6/12 md:w-5/12">
-                        <div className="mt-6 md:mt-0 lg:mt-0 bg-gray-50 border border-gray-200 p-4 lg:p-6 rounded-xl">
-                          <Card />
-                        </div>
-                      </div>
+                      <div className="w-full xl:w-5/12 lg:w-6/12 md:w-5/12"></div>
                     </div>
                   </div>
                 </div>

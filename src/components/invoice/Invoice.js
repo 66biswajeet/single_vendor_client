@@ -119,6 +119,12 @@ const Invoice = ({ data, printRef, globalSetting, currency }) => {
                     scope="col"
                     className="font-serif font-semibold px-6 py-2 text-gray-700 uppercase tracking-wider text-center"
                   >
+                    Selected Size
+                  </th>
+                  <th
+                    scope="col"
+                    className="font-serif font-semibold px-6 py-2 text-gray-700 uppercase tracking-wider text-center"
+                  >
                     Item Price
                   </th>
 

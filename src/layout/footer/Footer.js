@@ -936,12 +936,12 @@ const Footer = () => {
             <p className="text-sm text-black leading-6 text-center font-medium">
               Copyright 2025 @{" "}
               <Link
-                href="https://techculture.solutions/"
+                href="https://single-vendor-client.vercel.app/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-black font-bold hover:text-gray-800 transition-colors duration-300 underline decoration-2 decoration-black/30"
               >
-                InfotechIndia
+                StickersRihno
               </Link>
               , All rights reserved.
             </p>

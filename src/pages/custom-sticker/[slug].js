@@ -2,7 +2,8 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useState, useEffect, useRef } from "react";
 import { useCart } from "react-use-cart";
-import { FiUpload, FiShoppingCart } from "react-icons/fi";
+import { useSession } from "next-auth/react";
+import { FiUpload, FiShoppingCart, FiArrowRight } from "react-icons/fi";
 import Layout from "@layout/Layout";
 import { notifySuccess, notifyError } from "@utils/toast";
 import useUtilsFunction from "@hooks/useUtilsFunction";
@@ -12,6 +13,7 @@ const CustomStickerDesign = () => {
   const { slug } = router.query;
   const { addItem } = useCart();
   const { currency } = useUtilsFunction();
+  const { data: session } = useSession();
 
   const [uploadedImage, setUploadedImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
@@ -172,6 +174,34 @@ const CustomStickerDesign = () => {
 
     if (!productData) {
       notifyError("Product data not found");
+      return;
+    }
+
+    // Check if user is authenticated
+    if (!session) {
+      // Save item to cart first
+      const customProduct = {
+        id: `custom-${productData.id}-${Date.now()}`,
+        title: productData.title,
+        name: productData.title,
+        price: productData.price,
+        image: cloudinaryUrl,
+        quantity: quantity,
+        customData: {
+          productId: productData.id,
+          selectedSize: productData.selectedSize,
+          selectedTier: productData.selectedTier,
+          uploadedImage: cloudinaryUrl,
+          uploadedImagePreview: cloudinaryPreviewUrl || cloudinaryUrl,
+          isCustomProduct: true,
+          fileType: uploadedImage.type,
+          fileName: uploadedImage.name,
+        },
+      };
+      addItem(customProduct, quantity);
+
+      // Redirect to mobile signin with checkout redirect
+      router.push("/auth/phone-signin?redirectUrl=checkout");
       return;
     }
 
@@ -421,8 +451,8 @@ const CustomStickerDesign = () => {
                     }
                     className="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-black font-bold py-4 rounded-full transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
                   >
-                    <FiShoppingCart className="w-5 h-5" />
-                    <span>{isUploading ? "Uploading..." : "ADD TO CART"}</span>
+                    <span>{isUploading ? "Uploading..." : "CONTINUE"}</span>
+                    {!isUploading && <FiArrowRight className="w-5 h-5" />}
                   </button>
                 </div>
               </div>
