@@ -1,9 +1,11 @@
-import { PDFDownloadLink } from "@react-pdf/renderer";
 import dynamic from "next/dynamic";
 import { useRef } from "react";
 import { IoCloudDownloadOutline, IoPrintOutline } from "react-icons/io5";
-import ReactToPrint from "react-to-print";
 import { useQuery } from "@tanstack/react-query";
+
+// Lazy load heavy PDF components
+const PDFDownloadLink = dynamic(() => import("@react-pdf/renderer").then(mod => mod.PDFDownloadLink), { ssr: false });
+const ReactToPrint = dynamic(() => import("react-to-print"), { ssr: false });
 
 //internal import
 
@@ -13,7 +15,7 @@ import Invoice from "@components/invoice/Invoice";
 import Loading from "@components/preloader/Loading";
 import OrderServices from "@services/OrderServices";
 import useUtilsFunction from "@hooks/useUtilsFunction";
-import InvoiceForDownload from "@components/invoice/InvoiceForDownload";
+const InvoiceForDownload = dynamic(() => import("@components/invoice/InvoiceForDownload"), { ssr: false });
 
 const Order = ({ params }) => {
   const printRef = useRef();

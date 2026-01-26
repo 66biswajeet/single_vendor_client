@@ -96,7 +96,7 @@ const useCheckoutSubmit = (storeSetting) => {
   useEffect(() => {
     const discountProductTotal = items?.reduce(
       (preValue, currentValue) => preValue + currentValue.itemTotal,
-      0
+      0,
     );
 
     let totalValue = 0;
@@ -207,9 +207,7 @@ const useCheckoutSubmit = (storeSetting) => {
           };
 
           await ShippingServices.createShipment(shipmentPayload);
-          console.log("Shipment created successfully");
         } catch (shipmentError) {
-          console.error("Failed to create shipment:", shipmentError);
           // Don't fail the order if shipment creation fails
           // Admin can retry from dashboard
         }
@@ -244,7 +242,7 @@ const useCheckoutSubmit = (storeSetting) => {
         OrderServices.sendEmailInvoiceToCustomer(updatedData).catch(
           (emailErr) => {
             console.error("Failed to send email invoice:", emailErr.message);
-          }
+          },
         );
       }
 
@@ -254,7 +252,7 @@ const useCheckoutSubmit = (storeSetting) => {
       // Proceed with order success
       router.push(`/order/${orderResponse?._id}`);
       notifySuccess(
-        "Your Order Confirmed! The invoice will be emailed to you shortly."
+        "Your Order Confirmed! The invoice will be emailed to you shortly.",
       );
       Cookies.remove("couponInfo");
       emptyCart();
@@ -384,7 +382,7 @@ const useCheckoutSubmit = (storeSetting) => {
       !destination?.country
     ) {
       notifyError(
-        "Please fill in complete shipping address before fetching rates."
+        "Please fill in complete shipping address before fetching rates.",
       );
       return;
     }
@@ -432,7 +430,7 @@ const useCheckoutSubmit = (storeSetting) => {
             });
           }
           console.log(
-            `Split item into ${numParcels} parcels of max ${MAX_ITEMS_PER_PARCEL} items each`
+            `Split item into ${numParcels} parcels of max ${MAX_ITEMS_PER_PARCEL} items each`,
           );
         } else {
           parcels.push({
@@ -458,24 +456,11 @@ const useCheckoutSubmit = (storeSetting) => {
         parcels: parcels,
       };
 
-      console.log("=== SHIPPING RATE REQUEST ===");
-      console.log("Total Parcels:", parcels.length);
-      console.log("Payload:", JSON.stringify(ratePayload, null, 2));
-
       const response = await ShippingServices.getRates(ratePayload);
-
-      console.log("=== SHIPPING RATE RESPONSE ===");
-      console.log("Full response:", response);
-      console.log("Response.success:", response.success);
-      console.log("Response.rates:", response.rates);
-      console.log("Response.message:", response.message);
-      console.log("Response.error:", response.error);
 
       if (response.success && response.rates) {
         // Extract rates array from nested structure
         const ratesArray = response.rates.rates || response.rates;
-        console.log("Extracted ratesArray:", ratesArray);
-        console.log("Number of available rates:", ratesArray?.length || 0);
 
         setShippingRates(ratesArray);
 
@@ -485,23 +470,23 @@ const useCheckoutSubmit = (storeSetting) => {
             (prev.total || prev.rate || prev.cost) <
             (curr.total || curr.rate || curr.cost)
               ? prev
-              : curr
+              : curr,
           );
           console.log("Selected cheapest rate:", cheapest);
           setSelectedShippingRate(cheapest);
           setShippingCost(
-            Number(cheapest.total || cheapest.rate || cheapest.cost || 0)
+            Number(cheapest.total || cheapest.rate || cheapest.cost || 0),
           );
         } else {
           console.warn(
             "Rates array is empty. Possible reasons:",
             "1. Stallion API has no carriers for this route",
             "2. Invalid shipping address",
-            "3. Warehouse address not configured"
+            "3. Warehouse address not configured",
           );
           setShippingRates([]);
           notifyError(
-            "No shipping rates available for this address. Please check your destination."
+            "No shipping rates available for this address. Please check your destination.",
           );
         }
       } else {
@@ -513,7 +498,7 @@ const useCheckoutSubmit = (storeSetting) => {
         });
         setShippingRates([]);
         notifyError(
-          response.error || response.message || "No shipping rates available"
+          response.error || response.message || "No shipping rates available",
         );
       }
     } catch (error) {
@@ -574,7 +559,7 @@ const useCheckoutSubmit = (storeSetting) => {
     try {
       const coupons = await CouponServices.getShowingCoupons();
       const result = coupons.filter(
-        (coupon) => coupon.couponCode === couponRef.current.value
+        (coupon) => coupon.couponCode === couponRef.current.value,
       );
       setIsCouponAvailable(false);
 
@@ -590,12 +575,12 @@ const useCheckoutSubmit = (storeSetting) => {
 
       if (total < result[0]?.minimumAmount) {
         notifyError(
-          `Minimum ${result[0].minimumAmount} USD required for Apply this coupon!`
+          `Minimum ${result[0].minimumAmount} USD required for Apply this coupon!`,
         );
         return;
       } else {
         notifySuccess(
-          `Your Coupon ${result[0].couponCode} is Applied on ${result[0].productType}!`
+          `Your Coupon ${result[0].couponCode} is Applied on ${result[0].productType}!`,
         );
         setIsCouponApplied(true);
         setMinimumAmount(result[0]?.minimumAmount);

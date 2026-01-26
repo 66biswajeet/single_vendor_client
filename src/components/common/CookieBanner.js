@@ -51,7 +51,7 @@ const CookieBanner = () => {
     }
     if (
       /Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(
-        ua
+        ua,
       )
     ) {
       return "mobile";
@@ -96,10 +96,7 @@ const CookieBanner = () => {
         pageUrl: window.location.href,
       };
 
-      console.log("Sending cookie consent to API:", consentData);
-
       const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/cookie-consent/`;
-      console.log("API URL:", apiUrl);
 
       const response = await fetch(apiUrl, {
         method: "POST",
@@ -110,19 +107,9 @@ const CookieBanner = () => {
       });
 
       if (!response.ok) {
-        console.error(
-          "Failed to save cookie consent. Status:",
-          response.status
-        );
         const errorText = await response.text();
-        console.error("Error response:", errorText);
-      } else {
-        const result = await response.json();
-        console.log("Cookie consent saved successfully:", result);
       }
-    } catch (error) {
-      console.error("Error saving cookie consent:", error);
-    }
+    } catch (error) {}
   };
 
   const handleAcceptAll = async () => {

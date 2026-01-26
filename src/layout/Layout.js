@@ -1,15 +1,13 @@
 import Head from "next/head";
+import dynamic from "next/dynamic";
 import { ToastContainer } from "react-toastify";
 
 //internal import
 
-import Navbar from "@layout/navbar/Navbar";
-import Footer from "@layout/footer/Footer";
-import NavBarTop from "./navbar/NavBarTop";
-import FooterTop from "@layout/footer/FooterTop";
-import MobileFooter from "@layout/footer/MobileFooter";
-// FeatureCard removed per request
-import CookieBanner from "@components/common/CookieBanner";
+const Navbar = dynamic(() => import("@layout/navbar/Navbar"), { ssr: true });
+const Footer = dynamic(() => import("@layout/footer/Footer"), { ssr: true });
+const MobileFooter = dynamic(() => import("@layout/footer/MobileFooter"), { ssr: true });
+const CookieBanner = dynamic(() => import("@components/common/CookieBanner"), { ssr: false });
 
 const Layout = ({ title, description, children }) => {
   return (

@@ -40,7 +40,20 @@ const useUtilsFunction = () => {
   };
 
   const showingImage = (data) => {
-    return data !== undefined && data;
+    if (data === undefined || data === null) return null;
+    // If it's an array, pick first
+    if (Array.isArray(data)) {
+      return showingImage(data[0]);
+    }
+    // If it's already a string URL
+    if (typeof data === "string") return data;
+    // If it's an object, try common keys
+    if (typeof data === "object") {
+      return (
+        data.url || data.src || data.path || data.secure_url || data.publicUrl || null
+      );
+    }
+    return null;
   };
 
   const showingUrl = (data) => {

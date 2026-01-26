@@ -19,7 +19,7 @@ let firebaseConfig = defaultFirebaseConfig;
 async function fetchFirebaseConfig() {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE_URL}/setting/firebase/config`
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/setting/firebase/config`,
     );
     if (response.ok) {
       const config = await response.json();
@@ -65,7 +65,6 @@ if (typeof window !== "undefined" && getApps().length === 0) {
   // Update with backend config asynchronously
   fetchFirebaseConfig().then((config) => {
     if (JSON.stringify(config) !== JSON.stringify(firebaseConfig)) {
-      console.log("Firebase config updated from backend");
     }
   });
 } else if (getApps().length > 0) {

@@ -1,17 +1,23 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
 
 import Layout from "@layout/Layout";
-import Banner from "@components/banner/Banner";
-import CardTwo from "@components/cta-card/CardTwo";
-import OfferCard from "@components/offer/OfferCard";
-import StickyCart from "@components/cart/StickyCart";
+import Head from "next/head";
 import Loading from "@components/preloader/Loading";
 import ProductCard from "@components/product/ProductCard";
-import MainCarousel from "@components/carousel/MainCarousel";
-import FeatureCategory from "@components/category/FeatureCategory";
+import HeroSection from "@components/hero/HeroSection";
 import CMSkeleton from "@components/preloader/CMSkeleton";
-import BestSellingShowcase from "@components/home/BestSellingShowcase";
+
+// Lazy load below-the-fold components to reduce initial JS execution
+const Banner = dynamic(() => import("@components/banner/Banner"));
+const FeatureCategory = dynamic(
+  () => import("@components/category/FeatureCategory"),
+);
+const BestSellingShowcase = dynamic(
+  () => import("@components/home/BestSellingShowcase"),
+);
+const StickyCart = dynamic(() => import("@components/cart/StickyCart"));
 
 import { SidebarContext } from "@context/SidebarContext";
 import useGetSetting from "@hooks/useGetSetting";
@@ -44,6 +50,57 @@ const ProductGrid = ({ products, attributes, limit, loading, error }) => {
     );
   }
 
+  // Simple client-side virtualization using react-window when available
+  const [canUseWindow, setCanUseWindow] = useState(false);
+  useEffect(() => {
+    setCanUseWindow(typeof window !== "undefined");
+  }, []);
+
+  const visibleProducts = products?.slice(0, limit) || [];
+
+  if (canUseWindow && visibleProducts.length > 40) {
+    try {
+      const { FixedSizeList } = require("react-window");
+      const columns = (() => {
+        const w = window.innerWidth;
+        if (w >= 1280) return 5;
+        if (w >= 1024) return 4;
+        if (w >= 768) return 3;
+        return 2;
+      })();
+
+      const rowCount = Math.ceil(visibleProducts.length / columns);
+      const Row = ({ index, style }) => {
+        const start = index * columns;
+        const items = visibleProducts.slice(start, start + columns);
+        return (
+          <div style={style} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4 lg:gap-4">
+            {items.map((product) => (
+              <ProductCard
+                key={product._id}
+                product={product}
+                attributes={attributes}
+              />
+            ))}
+          </div>
+        );
+      };
+
+      return (
+        <FixedSizeList
+          height={Math.min(800, rowCount * 360)}
+          itemCount={rowCount}
+          itemSize={360}
+          width="100%"
+        >
+          {Row}
+        </FixedSizeList>
+      );
+    } catch (e) {
+      // react-window not installed; fall back to normal grid
+    }
+  }
+
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4 lg:gap-4">
       {products?.slice(0, limit).map((product) => (
@@ -57,7 +114,14 @@ const ProductGrid = ({ products, attributes, limit, loading, error }) => {
   );
 };
 
-const Home = ({ popularProducts, discountProducts, attributes }) => {
+const Home = ({
+  popularProducts,
+  discountProducts,
+  trendingProducts,
+  bestsellerProducts,
+  attributes,
+  heroImage,
+}) => {
   const router = useRouter();
   const { isLoading, setIsLoading } = useContext(SidebarContext);
   const { loading, error, storeCustomizationSetting } = useGetSetting();
@@ -74,9 +138,19 @@ const Home = ({ popularProducts, discountProducts, attributes }) => {
         <StickyCart />
 
         <div className="bg-white border-b border-gray-200">
+          {heroImage && (
+            <Head>
+              <link
+                rel="preload"
+                as="image"
+                href={heroImage}
+                crossOrigin=""
+              />
+            </Head>
+          )}
           <div className="mx-auto py-6 max-w-screen-2xl px-3 sm:px-10">
             <div className="flex w-full gap-4">
-              <MainCarousel />
+              <HeroSection serverHeroImage={heroImage} />
             </div>
 
             {storeCustomizationSetting?.home?.promotion_banner_status && (
@@ -103,8 +177,8 @@ const Home = ({ popularProducts, discountProducts, attributes }) => {
 
         {/* Best Selling Showcase Section */}
         <BestSellingShowcase
-          bestSellingProducts={popularProducts || []}
-          trendingProducts={discountProducts || []}
+          bestSellingProducts={bestsellerProducts || popularProducts || []}
+          trendingProducts={trendingProducts || []}
         />
 
         {storeCustomizationSetting?.home?.popular_products_status && (
@@ -171,6 +245,12 @@ export const getServerSideProps = async (context) => {
   const { cookies } = context.req;
   const { query, _id } = context.query;
 
+  // Add cache headers to improve mobile performance
+  context.res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=60, stale-while-revalidate=120",
+  );
+
   const [data, attributes] = await Promise.all([
     ProductServices.getShowingStoreProducts({
       category: _id || "",
@@ -179,12 +259,38 @@ export const getServerSideProps = async (context) => {
     AttributeServices.getShowingAttributes(),
   ]);
 
+  // Fetch store customization so we can server-preload hero image
+  let heroImage = null;
+  try {
+    const storeCustomization = await import("@services/SettingServices");
+    const sc = await storeCustomization.default.getStoreCustomizationSetting();
+    heroImage = sc?.hero?.image || null;
+    // if Cloudinary url exists, try to add auto-format/quality/width
+    if (heroImage && heroImage.includes("res.cloudinary.com") && heroImage.includes("/upload/")) {
+      const transform = "f_auto,q_auto,c_fill,w_1200";
+      const parts = heroImage.split("/upload/");
+      if (parts.length >= 2) {
+        const prefix = parts[0];
+        const rest = parts.slice(1).join("/upload/");
+        // if there's already a transform at the start of rest, leave it
+        if (!rest.match(/^(f_auto|q_auto|c_|w_|h_|g_)/)) {
+          heroImage = `${prefix}/upload/${transform}/${rest}`;
+        }
+      }
+    }
+  } catch (e) {
+    heroImage = null;
+  }
+
   return {
     props: {
       attributes,
       cookies,
+      heroImage,
       popularProducts: data.popularProducts,
       discountProducts: data.discountedProducts,
+      trendingProducts: data.trendingProducts || [],
+      bestsellerProducts: data.bestsellerProducts || [],
     },
   };
 };

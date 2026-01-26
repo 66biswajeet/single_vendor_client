@@ -108,7 +108,7 @@ const Navbar = () => {
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setSelectedIndex((prev) =>
-        prev < suggestions.length - 1 ? prev + 1 : prev
+        prev < suggestions.length - 1 ? prev + 1 : prev,
       );
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
@@ -255,8 +255,9 @@ const Navbar = () => {
             <Link href="/" className="flex items-center space-x-3 group">
               <div className="relative w-32 h-16 sm:w-40 sm:h-20 lg:w-56 lg:h-24 xl:w-58 xl:h-26 transition-transform group-hover:scale-105 duration-300">
                 <Image
-                  width={630}
-                  height={396}
+                  width={320}
+                  height={80}
+                  sizes="(max-width: 640px) 160px, (max-width: 1024px) 200px, 280px"
                   className="w-full h-full object-contain"
                   priority
                   src={

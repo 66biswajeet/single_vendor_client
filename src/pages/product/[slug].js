@@ -1,30 +1,32 @@
 import useTranslation from "next-translate/useTranslation";
+import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
 import { useContext, useEffect, useState } from "react";
 import { FiChevronRight, FiMinus, FiPlus } from "react-icons/fi";
-import {
-  FacebookIcon,
-  FacebookShareButton,
-  LinkedinIcon,
-  LinkedinShareButton,
-  RedditIcon,
-  RedditShareButton,
-  TwitterIcon,
-  TwitterShareButton,
-  WhatsappIcon,
-  WhatsappShareButton,
-} from "react-share";
+
+// Lazy load heavy social sharing components
+const FacebookIcon = dynamic(() => import("react-share").then(mod => mod.FacebookIcon), { ssr: false });
+const FacebookShareButton = dynamic(() => import("react-share").then(mod => mod.FacebookShareButton), { ssr: false });
+const LinkedinIcon = dynamic(() => import("react-share").then(mod => mod.LinkedinIcon), { ssr: false });
+const LinkedinShareButton = dynamic(() => import("react-share").then(mod => mod.LinkedinShareButton), { ssr: false });
+const RedditIcon = dynamic(() => import("react-share").then(mod => mod.RedditIcon), { ssr: false });
+const RedditShareButton = dynamic(() => import("react-share").then(mod => mod.RedditShareButton), { ssr: false });
+const TwitterIcon = dynamic(() => import("react-share").then(mod => mod.TwitterIcon), { ssr: false });
+const TwitterShareButton = dynamic(() => import("react-share").then(mod => mod.TwitterShareButton), { ssr: false });
+const WhatsappIcon = dynamic(() => import("react-share").then(mod => mod.WhatsappIcon), { ssr: false });
+const WhatsappShareButton = dynamic(() => import("react-share").then(mod => mod.WhatsappShareButton), { ssr: false });
 
 import Price from "@components/common/Price";
 import Tags from "@components/common/Tags";
 import Layout from "@layout/Layout";
 import { notifyError } from "@utils/toast";
-import Card from "@components/slug-card/Card";
+const Card = dynamic(() => import("@components/slug-card/Card"), { ssr: false });
 import useAddToCart from "@hooks/useAddToCart";
 import Loading from "@components/preloader/Loading";
-import ProductCard from "@components/product/ProductCard";
+const ProductCard = dynamic(() => import("@components/product/ProductCard"), { ssr: true });
 import VariantList from "@components/variants/VariantList";
 import SizeVariantSelector from "@components/variants/SizeVariantSelector";
 import { SidebarContext } from "@context/SidebarContext";
@@ -48,13 +50,13 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
   const [selectedVariant, setSelectedVariant] = useState({});
   const [isReadMore, setIsReadMore] = useState(true);
   const [selectedVariantAttributes, setSelectedVariantAttributes] = useState(
-    {}
+    {},
   );
   const [variantAttributes, setVariantAttributes] = useState([]);
 
   // Determine initial size-variant selection synchronously from product prop
   const initialSizeVariants = (product?.variants || []).filter(
-    (v) => v.variantType === "size"
+    (v) => v.variantType === "size",
   );
   const initialSelectedSize = initialSizeVariants.length
     ? initialSizeVariants[0]
@@ -70,7 +72,7 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
   const [selectedSize, setSelectedSize] = useState(initialSelectedSize);
   const [selectedTier, setSelectedTier] = useState(initialSelectedTier);
   const [hasSizeVariants, setHasSizeVariants] = useState(
-    initialSizeVariants.length > 0
+    initialSizeVariants.length > 0,
   );
   const [customStickerEnabled, setCustomStickerEnabled] = useState(false);
 
@@ -93,6 +95,12 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
 
   const productImages = product?.image || [];
 
+  // Reset selected image when navigating to a different product client-side
+  useEffect(() => {
+    // Initialize selectedImage to the first product image when product changes
+    setSelectedImage(productImages[0] || "");
+  }, [product?._id, productImages]);
+
   // Check if custom sticker feature is enabled
   useEffect(() => {
     const fetchCustomProductSettings = async () => {
@@ -112,7 +120,7 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
     const discountPercentage =
       originalPriceValue > 0
         ? getNumber(
-            ((originalPriceValue - priceValue) / originalPriceValue) * 100
+            ((originalPriceValue - priceValue) / originalPriceValue) * 100,
           )
         : 0;
 
@@ -235,7 +243,7 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
     const isVariantSelected = product?.variants?.some(
       (variant) =>
         Object.entries(variant).sort().toString() ===
-        Object.entries(selectedVariant).sort().toString()
+        Object.entries(selectedVariant).sort().toString(),
     );
 
     if (
@@ -251,7 +259,7 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
 
       const variantNameParts = variantAttributes
         ?.map((att) =>
-          att.variants?.find((v) => v._id === selectedVariant[att._id])
+          att.variants?.find((v) => v._id === selectedVariant[att._id]),
         )
         .map((el) => showingTranslateValue(el?.name));
 
@@ -265,7 +273,7 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
           product?.variants?.length <= 0
             ? showingTranslateValue(product.title)
             : `${showingTranslateValue(product.title)}-${variantNameParts.join(
-                "-"
+                "-",
               )}`,
         image: selectedImage,
         variant: selectedVariant || {},
@@ -287,7 +295,7 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
 
   const variantFilter = (variant) => {
     return Object.keys(selectedVariantAttributes).every(
-      (key) => selectedVariantAttributes[key] === variant[key]
+      (key) => selectedVariantAttributes[key] === variant[key],
     );
   };
 
@@ -307,7 +315,7 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
     if (!product?.variants) return;
 
     const detectedSizeVariants = product.variants.filter(
-      (variant) => variant.variantType === "size"
+      (variant) => variant.variantType === "size",
     );
 
     if (detectedSizeVariants.length > 0) {
@@ -355,22 +363,22 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
               ...rest
             } = variant;
             return rest;
-          })
-        )
+          }),
+        ),
       );
 
       const selectVar = filterKey.reduce(
         (obj, key) => ({ ...obj, [key]: selectedVariant[key] }),
-        {}
+        {},
       );
 
       const newObj = Object.entries(selectVar).reduce(
         (acc, [key, val]) => (val ? { ...acc, [key]: val } : acc),
-        {}
+        {},
       );
 
       const matchedVariant = result.find((variant) =>
-        Object.keys(newObj).every((key) => newObj[key] === variant[key])
+        Object.keys(newObj).every((key) => newObj[key] === variant[key]),
       );
 
       if (result.length <= 0 || !matchedVariant) {
@@ -570,7 +578,9 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
         >
           CONTINUE
         </button>
-        <p className="text-sm text-gray-600 mt-2">Next step → Upload image</p>
+        <p className="text-sm text-gray-600 mt-2">
+          Next step → Upload Your Artwork
+        </p>
       </div>
     );
   };
@@ -617,71 +627,73 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
     );
   }
 
-  return (
+  return isLoading ? (
+    <Loading loading={isLoading} />
+  ) : (
     <>
-      {isLoading ? (
-        <Loading loading={isLoading} />
-      ) : (
-        <Layout
-          title={showingTranslateValue(product?.title) || "Product"}
-          description={productDescription}
-        >
-          <div className="px-0 py-10 lg:py-12 bg-white">
-            <div className="mx-auto px-4 lg:px-8 max-w-screen-2xl">
-              <div className="flex items-center pb-6">
-                <ol className="flex items-center space-x-2 text-sm text-gray-600">
-                  <li>
-                    <Link
-                      href="/"
-                      className="hover:text-yellow-600 transition-colors"
-                    >
-                      Home
-                    </Link>
-                  </li>
-                  <li>
-                    <FiChevronRight className="w-4 h-4" />
-                  </li>
-                  <li>
-                    <Link
-                      href={`/search?category=${category_name}&_id=${product?.category?._id}`}
-                      className="hover:text-yellow-600 transition-colors"
-                    >
-                      {category_name}
-                    </Link>
-                  </li>
-                  <li>
-                    <FiChevronRight className="w-4 h-4" />
-                  </li>
-                  <li className="text-black font-medium truncate max-w-xs">
-                    {showingTranslateValue(product?.title)}
-                  </li>
-                </ol>
-              </div>
-
-              <div className="w-full rounded-2xl p-6 lg:p-8 bg-white border border-gray-200 shadow-lg">
-                <div className="flex flex-col xl:flex-row gap-8 lg:gap-12">
-                  <div
-                    className="flex-shrink-0 xl:pr-10 w-full mx-auto md:w-6/12 lg:w-5/12 xl:w-4/12"
-                    style={{ position: "relative" }}
+      <Head>
+        {product?.image && product.image[0] && (
+          <link rel="preload" as="image" href={product.image[0]} />
+        )}
+      </Head>
+      <Layout
+        title={showingTranslateValue(product?.title) || "Product"}
+        description={productDescription}
+      >
+        <div className="px-0 py-10 lg:py-12 bg-white">
+          <div className="mx-auto px-4 lg:px-8 max-w-screen-2xl">
+            <div className="flex items-center pb-6">
+              <ol className="flex items-center space-x-2 text-sm text-gray-600">
+                <li>
+                  <Link
+                    href="/"
+                    className="hover:text-yellow-600 transition-colors"
                   >
-                    {mainImage ? (
-                      <ImageZoom src={mainImage} alt="Product Image" />
-                    ) : (
-                      <div className="w-full h-96 bg-gray-50 flex items-center justify-center rounded-2xl border border-gray-200">
-                        <span className="text-gray-400">
-                          No Image Available
-                        </span>
-                      </div>
-                    )}
+                    Home
+                  </Link>
+                </li>
+                <li>
+                  <FiChevronRight className="w-4 h-4" />
+                </li>
+                <li>
+                  <Link
+                    href={`/search?category=${category_name}&_id=${product?.category?._id}`}
+                    className="hover:text-yellow-600 transition-colors"
+                  >
+                    {category_name}
+                  </Link>
+                </li>
+                <li>
+                  <FiChevronRight className="w-4 h-4" />
+                </li>
+                <li className="text-black font-medium truncate max-w-xs">
+                  {showingTranslateValue(product?.title)}
+                </li>
+              </ol>
+            </div>
 
-                    {productImages.length > 1 && (
-                      <div className="mt-6">
-                        <div className="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
-                          {thumbnailImages}
-                        </div>
+            <div className="w-full rounded-2xl p-6 lg:p-8 bg-white border border-gray-200 shadow-lg">
+              <div className="flex flex-col xl:flex-row gap-8 lg:gap-12">
+                <div
+                  className="flex-shrink-0 xl:pr-10 w-full mx-auto md:w-6/12 lg:w-5/12 xl:w-4/12"
+                  style={{ position: "relative" }}
+                >
+                  {mainImage ? (
+                    <ImageZoom src={mainImage} alt="Product Image" />
+                  ) : (
+                    <div className="w-full h-96 bg-gray-50 flex items-center justify-center rounded-2xl border border-gray-200">
+                      <span className="text-gray-400">No Image Available</span>
+                    </div>
+                  )}
+
+                  {productImages.length > 1 && (
+                    <div className="mt-6">
+                      <div className="flex space-x-3 overflow-x-auto pb-2 scrollbar-hide">
+                        {thumbnailImages}
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
+                </div>
 
                   <div className="w-full">
                     <div className="flex flex-col md:flex-row lg:flex-row xl:flex-row">
@@ -690,6 +702,71 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
                           <h1 className="text-2xl lg:text-3xl font-bold font-serif text-black mb-2">
                             {showingTranslateValue(product?.title)}
                           </h1>
+
+                          {/* Star Rating */}
+                          {product?.rating > 0 && (
+                            <div className="flex items-center gap-2 mb-3">
+                              <div className="flex items-center">
+                                {[...Array(5)].map((_, i) => {
+                                  const starValue = i + 1;
+                                  const isFull = product.rating >= starValue;
+                                  const isHalf =
+                                    !isFull &&
+                                    product.rating > i &&
+                                    product.rating < starValue;
+
+                                  return (
+                                    <svg
+                                      key={i}
+                                      className="w-5 h-5"
+                                      fill={
+                                        isFull || isHalf ? "#F59E0B" : "#E5E7EB"
+                                      }
+                                      viewBox="0 0 20 20"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                      {isHalf ? (
+                                        <defs>
+                                          <linearGradient
+                                            id={`half-detail-${i}`}
+                                          >
+                                            <stop
+                                              offset="50%"
+                                              stopColor="#F59E0B"
+                                            />
+                                            <stop
+                                              offset="50%"
+                                              stopColor="#E5E7EB"
+                                            />
+                                          </linearGradient>
+                                        </defs>
+                                      ) : null}
+                                      <path
+                                        fill={
+                                          isHalf
+                                            ? `url(#half-detail-${i})`
+                                            : undefined
+                                        }
+                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                                      />
+                                    </svg>
+                                  );
+                                })}
+                              </div>
+                              <span className="text-sm text-gray-700 font-semibold">
+                                {product.rating.toFixed(1)}
+                              </span>
+                              {product?.reviewCount > 0 && (
+                                <span className="text-sm text-gray-500">
+                                  (
+                                  {product.reviewCount >= 1000
+                                    ? `${(product.reviewCount / 1000).toFixed(1)}K`
+                                    : product.reviewCount}{" "}
+                                  Reviews)
+                                </span>
+                              )}
+                            </div>
+                          )}
 
                           <div className="flex flex-row items-center gap-2">
                             <Discount
@@ -808,7 +885,6 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
             </div>
           </div>
         </Layout>
-      )}
     </>
   );
 };
@@ -833,7 +909,7 @@ export const getServerSideProps = async (context) => {
 
     const foundProduct =
       productsData?.products?.find(
-        (productItem) => productItem?.slug === slug
+        (productItem) => productItem?.slug === slug,
       ) || null;
 
     if (!foundProduct) {

@@ -22,13 +22,13 @@ const MainCarousel = () => {
       id: 1,
 
       title: showingTranslateValue(
-        storeCustomizationSetting?.slider?.first_title
+        storeCustomizationSetting?.slider?.first_title,
       ),
       info: showingTranslateValue(
-        storeCustomizationSetting?.slider?.first_description
+        storeCustomizationSetting?.slider?.first_description,
       ),
       buttonName: showingTranslateValue(
-        storeCustomizationSetting?.slider?.first_button
+        storeCustomizationSetting?.slider?.first_button,
       ),
       url: showingUrl(storeCustomizationSetting?.slider?.first_link),
       image:
@@ -38,13 +38,13 @@ const MainCarousel = () => {
     {
       id: 2,
       title: showingTranslateValue(
-        storeCustomizationSetting?.slider?.second_title
+        storeCustomizationSetting?.slider?.second_title,
       ),
       info: showingTranslateValue(
-        storeCustomizationSetting?.slider?.second_description
+        storeCustomizationSetting?.slider?.second_description,
       ),
       buttonName: showingTranslateValue(
-        storeCustomizationSetting?.slider?.second_button
+        storeCustomizationSetting?.slider?.second_button,
       ),
       url: showingUrl(storeCustomizationSetting?.slider?.second_link),
       image:
@@ -54,13 +54,13 @@ const MainCarousel = () => {
     {
       id: 3,
       title: showingTranslateValue(
-        storeCustomizationSetting?.slider?.third_title
+        storeCustomizationSetting?.slider?.third_title,
       ),
       info: showingTranslateValue(
-        storeCustomizationSetting?.slider?.third_description
+        storeCustomizationSetting?.slider?.third_description,
       ),
       buttonName: showingTranslateValue(
-        storeCustomizationSetting?.slider?.third_button
+        storeCustomizationSetting?.slider?.third_button,
       ),
       url: showingUrl(storeCustomizationSetting?.slider?.third_link),
       image:
@@ -70,13 +70,13 @@ const MainCarousel = () => {
     {
       id: 4,
       title: showingTranslateValue(
-        storeCustomizationSetting?.slider?.four_title
+        storeCustomizationSetting?.slider?.four_title,
       ),
       info: showingTranslateValue(
-        storeCustomizationSetting?.slider?.four_description
+        storeCustomizationSetting?.slider?.four_description,
       ),
       buttonName: showingTranslateValue(
-        storeCustomizationSetting?.slider?.four_button
+        storeCustomizationSetting?.slider?.four_button,
       ),
       url: showingUrl(storeCustomizationSetting?.slider?.four_link),
       image:
@@ -86,13 +86,13 @@ const MainCarousel = () => {
     {
       id: 5,
       title: showingTranslateValue(
-        storeCustomizationSetting?.slider?.five_title
+        storeCustomizationSetting?.slider?.five_title,
       ),
       info: showingTranslateValue(
-        storeCustomizationSetting?.slider?.five_description
+        storeCustomizationSetting?.slider?.five_description,
       ),
       buttonName: showingTranslateValue(
-        storeCustomizationSetting?.slider?.five_button
+        storeCustomizationSetting?.slider?.five_button,
       ),
       url: showingUrl(storeCustomizationSetting?.slider?.five_link),
       image:
@@ -136,12 +136,15 @@ const MainCarousel = () => {
                 <Image
                   src={item.image || "/slider/slider-1.jpg"}
                   alt={item.title}
-                  width={1200}
-                  height={400}
+                  width={1920}
+                  height={600}
+                  sizes="(max-width: 640px) 640px, (max-width: 768px) 768px, (max-width: 1024px) 1024px, 1920px"
+                  quality={70}
                   className="object-cover w-full h-full"
-                  priority
+                  priority={i === 0}
+                  fetchPriority={i === 0 ? "high" : "auto"}
+                  loading={i === 0 ? "eager" : "lazy"}
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent"></div>
               </div>
               <div className="absolute top-0 left-0 z-10 flex-col flex w-full h-full place-items-start justify-center">
                 <div className="pl-4 pr-8 sm:pl-6 sm:pr-12 md:pl-8 md:pr-16 lg:pl-12 w-full sm:w-9/12 md:w-8/12 lg:w-7/12">

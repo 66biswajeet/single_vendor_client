@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import useGetSetting from "@hooks/useGetSetting";
 import useUtilsFunction from "@hooks/useUtilsFunction";
+import Tags from "@components/common/Tags";
 
 const BestSellingShowcase = ({
   bestSellingProducts = [],
@@ -15,13 +16,6 @@ const BestSellingShowcase = ({
   const showcaseSettings = storeCustomizationSetting?.home?.home_showcase || {};
   const isEnabled = showcaseSettings?.enabled !== false;
 
-  // Debug: Log the settings to console
-  console.log("BestSellingShowcase - showcaseSettings:", showcaseSettings);
-  console.log(
-    "BestSellingShowcase - storeCustomizationSetting:",
-    storeCustomizationSetting
-  );
-
   if (!isEnabled) return null;
 
   // Get first 4 best selling products for left column
@@ -31,13 +25,6 @@ const BestSellingShowcase = ({
     trendingProducts.length > 0
       ? trendingProducts.slice(0, 2)
       : bestSellingProducts.slice(4, 6);
-
-  console.log("BestSellingShowcase - displayCenter:", displayCenter);
-  console.log("BestSellingShowcase - trendingProducts:", trendingProducts);
-  console.log(
-    "BestSellingShowcase - bestSellingProducts:",
-    bestSellingProducts
-  );
 
   return (
     <div className="bg-white py-12 px-4 sm:px-6 lg:px-8">
@@ -67,6 +54,10 @@ const BestSellingShowcase = ({
                       alt={showingTranslateValue(product.title)}
                       width={100}
                       height={100}
+                      loading="lazy"
+                      decoding="async"
+                      fetchPriority="low"
+                      sizes="100px"
                       className="object-contain group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
@@ -138,6 +129,10 @@ const BestSellingShowcase = ({
                         alt={showingTranslateValue(product.title)}
                         width={128}
                         height={128}
+                        loading="lazy"
+                        decoding="async"
+                        fetchPriority="low"
+                        sizes="128px"
                         className="object-contain group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
@@ -182,12 +177,8 @@ const BestSellingShowcase = ({
                         )}
                       </div>
 
-                      {/* Status Badge */}
-                      {product.tag && (
-                        <span className="inline-block px-3 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded uppercase">
-                          {product.tag}
-                        </span>
-                      )}
+                      {/* Status / Tags */}
+                      {product.tag && <Tags product={product} />}
                     </div>
 
                     {/* Arrow Icon */}
@@ -227,6 +218,9 @@ const BestSellingShowcase = ({
                   src={showingImage(showcaseSettings.right_image)}
                   alt="Background"
                   fill
+                  loading="lazy"
+                  decoding="async"
+                  fetchPriority="low"
                   className="object-cover"
                 />
               </div>

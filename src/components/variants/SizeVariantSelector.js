@@ -44,8 +44,8 @@ const SizeVariantSelector = ({
             let displaySize = cleaned;
 
             if (nums && nums.length >= 2) {
-              // Format as "50 mm × 50 mm"
-              displaySize = `${nums[0]} mm × ${nums[1]} mm`;
+              // Format as inches e.g. 2"X2"
+              displaySize = `${nums[0]}\"X${nums[1]}\"`;
             }
 
             return (
@@ -105,7 +105,7 @@ const SizeVariantSelector = ({
                       const v = e.target.value;
                       setCustomWidth(v);
                       // notify parent with updated combination
-                      const combo = `${v || ""} mm × ${customHeight || ""} mm`;
+                      const combo = `${v || ""}\"X${customHeight || ""}\"`;
                       const tiers =
                         (sizeVariants &&
                           sizeVariants[0] &&
@@ -129,7 +129,7 @@ const SizeVariantSelector = ({
                     onChange={(e) => {
                       const v = e.target.value;
                       setCustomHeight(v);
-                      const combo = `${customWidth || ""} mm × ${v || ""} mm`;
+                      const combo = `${customWidth || ""}\"X${v || ""}\"`;
                       const tiers =
                         (sizeVariants &&
                           sizeVariants[0] &&
@@ -242,7 +242,7 @@ const SizeVariantSelector = ({
 
                         if (numValue <= lastTier.quantity) {
                           setCustomQuantityError(
-                            `Quantity must be greater than ${lastTier.quantity}`
+                            `Quantity must be greater than ${lastTier.quantity}`,
                           );
                         } else {
                           setCustomQuantityError("");

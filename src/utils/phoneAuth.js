@@ -23,11 +23,9 @@ export const initializeRecaptcha = (containerId = "recaptcha-container") => {
       size: "normal",
       callback: (response) => {
         // reCAPTCHA solved - allow signInWithPhoneNumber
-        console.log("reCAPTCHA verified");
       },
       "expired-callback": () => {
         // Response expired. Ask user to solve reCAPTCHA again.
-        console.log("reCAPTCHA expired");
       },
     });
 
@@ -49,14 +47,14 @@ export const sendOTP = async (phoneNumber, recaptchaVerifier) => {
     // Ensure phone number is in E.164 format
     if (!phoneNumber.startsWith("+")) {
       throw new Error(
-        "Phone number must be in E.164 format (e.g., +1234567890)"
+        "Phone number must be in E.164 format (e.g., +1234567890)",
       );
     }
 
     const confirmationResult = await signInWithPhoneNumber(
       auth,
       phoneNumber,
-      recaptchaVerifier
+      recaptchaVerifier,
     );
 
     // Save confirmation result to window for later use

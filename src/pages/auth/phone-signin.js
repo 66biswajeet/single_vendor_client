@@ -36,9 +36,7 @@ const PhoneSignin = () => {
           if (window.recaptchaVerifier) {
             try {
               window.recaptchaVerifier.clear();
-            } catch (e) {
-              console.log("Clearing old verifier:", e);
-            }
+            } catch (e) {}
           }
 
           const verifier = initializeRecaptcha("recaptcha-container");
@@ -47,7 +45,7 @@ const PhoneSignin = () => {
         } catch (error) {
           console.error("Failed to initialize reCAPTCHA:", error);
           notifyError(
-            "Failed to initialize reCAPTCHA. Please refresh the page."
+            "Failed to initialize reCAPTCHA. Please refresh the page.",
           );
         }
       };
@@ -69,7 +67,7 @@ const PhoneSignin = () => {
       // Validate phone number format
       if (!phoneNumber.startsWith("+")) {
         notifyError(
-          "Phone number must include country code (e.g., +1234567890)"
+          "Phone number must include country code (e.g., +1234567890)",
         );
         setLoading(false);
         return;
@@ -98,7 +96,7 @@ const PhoneSignin = () => {
         notifyError("SMS quota exceeded. Please try again later.");
       } else if (error.code === "auth/internal-error") {
         notifyError(
-          "Firebase configuration error. Please check Firebase Console settings."
+          "Firebase configuration error. Please check Firebase Console settings.",
         );
       } else if (error.code === "auth/captcha-check-failed") {
         notifyError("reCAPTCHA verification failed. Please try again.");
@@ -308,7 +306,7 @@ const PhoneSignin = () => {
                             value={otp}
                             onChange={(e) =>
                               setOtp(
-                                e.target.value.replace(/\D/g, "").slice(0, 6)
+                                e.target.value.replace(/\D/g, "").slice(0, 6),
                               )
                             }
                             placeholder="6 digti OTP"

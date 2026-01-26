@@ -42,14 +42,10 @@ export const initializeAnalytics = () => {
     //   'analytics_storage': 'granted',
     //   'ad_storage': 'granted'
     // });
-
     // Initialize Facebook Pixel
     // Example: fbq('consent', 'grant');
-
-    console.log("Analytics initialized - cookies accepted");
   } else {
     // Only essential cookies
-    console.log("Only essential cookies enabled");
   }
 };
 

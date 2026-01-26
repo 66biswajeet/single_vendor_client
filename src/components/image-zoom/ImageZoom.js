@@ -1,5 +1,6 @@
 import NextImage from "next/image";
 import { useImageZoom } from "@hooks/useImageZoom";
+import cloudinaryLoader from "@lib/cloudinaryLoader";
 
 const ImageZoom = ({ src, alt = "Product Image", zoomScale = 2.5 }) => {
   const {
@@ -25,6 +26,7 @@ const ImageZoom = ({ src, alt = "Product Image", zoomScale = 2.5 }) => {
         >
           <div className="relative w-full h-full">
             <NextImage
+              loader={cloudinaryLoader}
               src={src}
               alt={alt}
               fill
@@ -32,6 +34,7 @@ const ImageZoom = ({ src, alt = "Product Image", zoomScale = 2.5 }) => {
               className="object-contain select-none"
               draggable={false}
               priority
+              fetchPriority="high"
               style={{ pointerEvents: "none" }}
             />
           </div>

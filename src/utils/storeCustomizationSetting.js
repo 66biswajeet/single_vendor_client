@@ -457,12 +457,32 @@ export const storeCustomization = {
       de: "Initiieren Sie gezielt fehlerfreie Kanäle mit hocheffizientem ROI. Stellen Sie sich durch branchenführende Best Practices erstklassige Daten vor. Ermöglichen Sie leistungsstarken E-Händlern auf effiziente Weise die Bereitstellung abteilungsübergreifender Dienstleistungen. Beschleunigen Sie nahtlose E-Tailer auf einzigartige Weise über kooperative Schnittstellen. Monotone myokardinierte kundengesteuerte Metadienste während fehlerfreier Szenarien.",
     },
   },
+  hero: {
+    image: "",
+    main_title: {
+      en: "Create Custom Stickers, Labels, Decals & More",
+      de: "Erstellen Sie individuelle Aufkleber, Etiketten, Aufkleber und mehr",
+    },
+    description: {
+      en: "Easily create & print custom products for your business, brand, and beyond. Order in any size, die-cut shape, and quantity.",
+      de: "Erstellen und drucken Sie ganz einfach individuelle Produkte für Ihr Unternehmen, Ihre Marke und darüber hinaus. Bestellen Sie in jeder Größe, Stanzform und Menge.",
+    },
+    button1_text: {
+      en: "Create Now",
+      de: "Jetzt erstellen",
+    },
+    button1_link: "/search",
+    button2_text: {
+      en: "Get A Quote",
+      de: "Angebot erhalten",
+    },
+    button2_link: "/contact-us",
+  },
   slider: {
     left_right_arrow: false,
     bottom_dots: true,
     both_slider: false,
-    first_img:
-      "https://res.cloudinary.com/ahossain/image/upload/v1697688491/settings/slider-1_rl8qdc.jpg",
+    first_img: "",
     first_title: {
       en: "The Best Quality Products Guaranteed!",
       de: "Die besten Qualitätsprodukte garantiert!",
@@ -811,8 +831,7 @@ export const storeCustomization = {
       de: "Profil aktualisieren",
     },
     block3_sub_link4: "/user/update-profile",
-    block4_logo:
-      "https://res.cloudinary.com/ahossain/image/upload/v1697688576/settings/logo-color_el4zmy.svg",
+    block4_logo: "",
     block4_address: {
       en: "987 Andre Plain Suite High Street 838, Lake Hestertown, USA",
       de: "987 Andre Plain Suite High Street 838, Lake Hestertown, USA",

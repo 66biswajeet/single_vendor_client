@@ -29,7 +29,7 @@ const ProductCard = ({ product, attributes }) => {
   const { items, addItem, updateItemQuantity, inCart } = useCart();
   const { handleIncreaseQuantity } = useAddToCart();
   const { globalSetting } = useGetSetting();
-  const { showingTranslateValue, getNumber } = useUtilsFunction();
+  const { showingTranslateValue, getNumber, showingImage } = useUtilsFunction();
 
   const currency = globalSetting?.default_currency || "$";
   const isInCart = inCart(product?._id);
@@ -48,7 +48,7 @@ const ProductCard = ({ product, attributes }) => {
   // - Else if product is combination, use first variant prices
   // - Else fallback to product.prices
   const initialSizeVariants = (product?.variants || []).filter(
-    (v) => v.variantType === "size"
+    (v) => v.variantType === "size",
   );
 
   let derivedPrice = 0;
@@ -153,7 +153,7 @@ const ProductCard = ({ product, attributes }) => {
   const handleSwitchToNextImage = () => {
     if (productImages.length > 0) {
       setCurrentImageIndex(
-        (prevIndex) => (prevIndex + 1) % productImages.length
+        (prevIndex) => (prevIndex + 1) % productImages.length,
       );
     }
   };
@@ -217,6 +217,9 @@ const ProductCard = ({ product, attributes }) => {
 
   const currentImage = productImages[currentImageIndex] || productImages[0];
 
+  const imgSrc = showingImage(currentImage) ||
+    "https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png";
+
   return (
     <>
       <ProductModal
@@ -260,21 +263,22 @@ const ProductCard = ({ product, attributes }) => {
             className="relative w-full bg-gray-100 overflow-hidden"
             style={{ paddingTop: "100%" }}
           >
-            {currentImage ? (
-              <ImageWithFallback
-                src={currentImage}
-                alt={productTitle || "Product"}
-                fill
-                className="object-contain p-4 group-hover:scale-105 transition-transform duration-500 ease-out absolute top-0 left-0"
-              />
-            ) : (
-              <Image
-                src="https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png"
-                fill
-                className="object-contain p-4 absolute top-0 left-0"
-                alt="product placeholder"
-              />
-            )}
+            <img
+              src={imgSrc}
+              alt={productTitle || "Product"}
+              style={{
+                objectFit: "contain",
+                width: "100%",
+                height: "100%",
+                position: "absolute",
+                top: 0,
+                left: 0,
+                padding: "16px",
+              }}
+              loading="eager"
+            />
+
+            {/* image */}
 
             {isOutOfStock && (
               <div className="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center z-10">
@@ -296,6 +300,51 @@ const ProductCard = ({ product, attributes }) => {
               {productTitle || "Untitled Product"}
             </h2>
           </Link>
+
+          {/* Star Rating */}
+          {product?.rating > 0 && (
+            <div className="flex items-center gap-1.5 mb-2">
+              <div className="flex items-center">
+                {[...Array(5)].map((_, i) => {
+                  const starValue = i + 1;
+                  const isFull = product.rating >= starValue;
+                  const isHalf =
+                    !isFull && product.rating > i && product.rating < starValue;
+
+                  return (
+                    <svg
+                      key={i}
+                      className="w-3.5 h-3.5"
+                      fill={isFull || isHalf ? "#F59E0B" : "#E5E7EB"}
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      {isHalf ? (
+                        <defs>
+                          <linearGradient id={`half-${i}`}>
+                            <stop offset="50%" stopColor="#F59E0B" />
+                            <stop offset="50%" stopColor="#E5E7EB" />
+                          </linearGradient>
+                        </defs>
+                      ) : null}
+                      <path
+                        fill={isHalf ? `url(#half-${i})` : undefined}
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                      />
+                    </svg>
+                  );
+                })}
+              </div>
+              <span className="text-xs text-gray-600 font-medium">
+                {product.rating.toFixed(1)}
+              </span>
+              {product?.reviewCount > 0 && (
+                <span className="text-xs text-gray-400">
+                  ({product.reviewCount.toLocaleString()})
+                </span>
+              )}
+            </div>
+          )}
 
           {productDescription && (
             <p className="text-xs text-gray-600 line-clamp-1 mb-3 leading-4">

@@ -20,7 +20,7 @@ import { useQuery } from "@tanstack/react-query";
 
 //internal import
 import Layout from "@layout/Layout";
-import Card from "@components/order-card/Card";
+const Card = dynamic(() => import("@components/order-card/Card"), { ssr: false });
 import OrderServices from "@services/OrderServices";
 import RecentOrder from "@pages/user/recent-order";
 import { SidebarContext } from "@context/SidebarContext";

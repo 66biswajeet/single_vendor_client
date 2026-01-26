@@ -21,8 +21,8 @@ const Uploader = ({ setImageUrl, imageUrl }) => {
         acceptedFiles.map((file) =>
           Object.assign(file, {
             preview: URL.createObjectURL(file),
-          })
-        )
+          }),
+        ),
       );
     },
   });
@@ -58,7 +58,7 @@ const Uploader = ({ setImageUrl, imageUrl }) => {
           .then((res) => {
             setImageUrl(res.data.secure_url);
           })
-          .catch((err) => console.log(err));
+          .catch((err) => {});
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -69,7 +69,7 @@ const Uploader = ({ setImageUrl, imageUrl }) => {
       // Make sure to revoke the data uris to avoid memory leaks
       files.forEach((file) => URL.revokeObjectURL(file.preview));
     },
-    [files]
+    [files],
   );
 
   return (

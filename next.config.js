@@ -1,5 +1,8 @@
 const runtimeCaching = require("next-pwa/cache");
 const nextTranslate = require("next-translate-plugin");
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+});
 
 const withPWA = require("next-pwa")({
   dest: "public",
@@ -12,12 +15,30 @@ const withPWA = require("next-pwa")({
   disable: process.env.NODE_ENV === "development",
 });
 
-module.exports = withPWA({
+const baseConfig = withPWA({
   reactStrictMode: true,
+  compress: true,
+  poweredByHeader: false,
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
+  },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production",
+  },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=0, must-revalidate",
+          },
+        ],
+      },
+    ];
   },
   i18n: {
     // These are all the locales you want to support in
@@ -52,13 +73,13 @@ module.exports = withPWA({
         hostname: "**",
       },
     ],
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 60,
+    // Provide device sizes so Next.js can generate appropriately sized images
+    deviceSizes: [320, 420, 768, 1024, 1200, 1600],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 512],
   },
 
   ...nextTranslate(),
 });
-
-// const withBundleAnalyzer = require('@next/bundle-analyzer')({
-//   enabled: process.env.ANALYZE === 'true',
-// });
-
-// module.exports = withBundleAnalyzer({});
+module.exports = withBundleAnalyzer(baseConfig);
