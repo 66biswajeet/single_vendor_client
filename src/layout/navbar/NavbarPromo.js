@@ -23,7 +23,7 @@ const LanguageOption = ({ language, onLanguageChange }) => {
   return (
     <button
       onClick={handleLanguageSelect}
-      className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+      className="flex items-center w-full px-4 py-2 text-sm text-gray-500 hover:bg-gray-100"
     >
       <div
         className={`flot-l flag ${language?.flag?.toLowerCase() || ""}`}
@@ -48,7 +48,7 @@ const SubCategoryItem = ({
   return (
     <button
       onClick={handleClick}
-      className="block w-full text-left px-4 py-3 text-sm text-gray-700 hover:bg-gray-100 hover:text-yellow-600"
+      className="block w-full text-left px-4 py-2.5 text-[14px] font-medium text-gray-500 hover:bg-yellow-50 hover:text-yellow-600 transition-colors"
     >
       {showingTranslateValue(subCategory?.name)}
     </button>
@@ -123,14 +123,14 @@ const CategoryDropdown = ({
     >
       <button
         onClick={handleCategoryButtonClick}
-        className="group inline-flex items-center px-2 py-3 hover:text-yellow-600 focus:outline-none transition-colors"
+        className="group inline-flex items-center px-3 py-3 hover:text-yellow-600 focus:outline-none transition-colors"
       >
-        <span className="font-serif text-base font-bold">
+        <span className="font-serif text-[15px] font-semibold tracking-wide">
           {showingTranslateValue(category?.name)}
         </span>
         {hasSubCategories && (
           <ChevronDownIcon
-            className="ml-1 h-3 w-3 group-hover:text-yellow-600 transition-colors"
+            className="ml-1.5 h-3.5 w-3.5 group-hover:text-yellow-600 transition-colors"
             aria-hidden="true"
           />
         )}
@@ -176,12 +176,12 @@ const MainCategoriesDropdown = ({
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
     >
-      <button className="group inline-flex items-center px-2 py-3 hover:text-yellow-600 focus:outline-none transition-colors">
-        <span className="font-serif text-base font-bold">
+      <button className="group inline-flex items-center px-3 py-3 hover:text-yellow-600 focus:outline-none transition-colors">
+        <span className="font-serif text-[15px] font-semibold tracking-wide">
           {showingTranslateValue(storeCustomizationSetting?.navbar?.categories)}
         </span>
         <ChevronDownIcon
-          className="ml-1 h-3 w-3 group-hover:text-yellow-600 transition-colors"
+          className="ml-1.5 h-3.5 w-3.5 group-hover:text-yellow-600 transition-colors"
           aria-hidden="true"
         />
       </button>

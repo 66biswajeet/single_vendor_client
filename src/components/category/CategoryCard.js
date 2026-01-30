@@ -30,7 +30,7 @@ const CategoryCard = ({ title, icon, nested, id }) => {
 
     setShow(!show);
     router.push(`/search?category=${name}&_id=${id}`);
-    closeCategoryDrawer;
+    closeCategoryDrawer();
     setIsLoading(!isLoading);
   };
 
@@ -40,7 +40,7 @@ const CategoryCard = ({ title, icon, nested, id }) => {
 
     setShowSubCategory({ id: id, show: showSubCategory.show ? false : true });
     router.push(`/search?category=${name}&_id=${id}`);
-    closeCategoryDrawer;
+    closeCategoryDrawer();
     setIsLoading(!isLoading);
   };
 
@@ -48,7 +48,7 @@ const CategoryCard = ({ title, icon, nested, id }) => {
     const name = categoryName.toLowerCase().replace(/[^A-Z0-9]+/gi, "-");
 
     router.push(`/search?category=${name}&_id=${id}`);
-    closeCategoryDrawer;
+    closeCategoryDrawer();
     setIsLoading(!isLoading);
   };
 
@@ -56,24 +56,24 @@ const CategoryCard = ({ title, icon, nested, id }) => {
     <>
       <a
         onClick={() => showCategory(id, title)}
-        className="p-2 flex items-center rounded-lg hover:bg-yellow-50 w-full hover:text-yellow-600 transition-colors"
+        className="p-3 flex items-center rounded-lg hover:bg-yellow-50 w-full hover:text-yellow-600 transition-colors cursor-pointer"
         role="button"
       >
         {icon ? (
-          <Image src={icon} width={18} height={18} alt="Category" />
+          <Image src={icon} width={20} height={20} alt="Category" />
         ) : (
           <Image
             src="https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png"
-            width={18}
-            height={18}
+            width={20}
+            height={20}
             alt="category"
           />
         )}
 
-        <div className="inline-flex items-center justify-between ml-3 text-sm font-medium w-full hover:text-yellow-600">
+        <div className="inline-flex items-center justify-between ml-3 text-[15px] font-semibold w-full hover:text-yellow-600">
           {title}
           {nested?.length > 0 && (
-            <span className="transition duration-700 ease-in-out inline-flex loading-none items-end text-gray-600">
+            <span className="transition duration-700 ease-in-out inline-flex loading-none items-end text-gray-500">
               {show ? <IoChevronDownOutline /> : <IoChevronForwardOutline />}
             </span>
           )}
@@ -88,20 +88,20 @@ const CategoryCard = ({ title, icon, nested, id }) => {
                   onClick={() =>
                     handleSubNestedCategory(
                       children._id,
-                      showingTranslateValue(children.name)
+                      showingTranslateValue(children.name),
                     )
                   }
-                  className="flex items-center font-serif pr-2 text-sm text-gray-600 hover:text-yellow-600 py-1 cursor-pointer transition-colors"
+                  className="flex items-center font-serif pr-2 text-[14px] font-medium text-gray-700 hover:text-yellow-600 py-2 cursor-pointer transition-colors"
                 >
-                  <span className="text-xs text-gray-600">
+                  <span className="text-xs text-gray-500">
                     <IoRemoveSharp />
                   </span>
 
-                  <div className="inline-flex items-center justify-between ml-3 text-sm font-medium w-full hover:text-yellow-600">
+                  <div className="inline-flex items-center justify-between ml-3 text-[14px] font-medium w-full hover:text-yellow-600">
                     {showingTranslateValue(children.name)}
 
                     {children.children.length > 0 ? (
-                      <span className="transition duration-700 ease-in-out inline-flex loading-none items-end text-gray-600">
+                      <span className="transition duration-700 ease-in-out inline-flex loading-none items-end text-gray-500">
                         {showSubCategory.id === children._id &&
                         showSubCategory.show ? (
                           <IoChevronDownOutline />
@@ -117,12 +117,12 @@ const CategoryCard = ({ title, icon, nested, id }) => {
                   onClick={() =>
                     handleSubCategory(
                       children._id,
-                      showingTranslateValue(children.name)
+                      showingTranslateValue(children.name),
                     )
                   }
-                  className="flex items-center font-serif py-1 text-sm text-gray-600 hover:text-yellow-600 cursor-pointer transition-colors"
+                  className="flex items-center font-serif py-2 text-[14px] font-medium text-gray-700 hover:text-yellow-600 cursor-pointer transition-colors"
                 >
-                  <span className="text-xs text-gray-600 pr-2">
+                  <span className="text-xs text-gray-500 pr-2">
                     <IoRemoveSharp />
                   </span>
                   {showingTranslateValue(children.name)}
@@ -139,12 +139,12 @@ const CategoryCard = ({ title, icon, nested, id }) => {
                         onClick={() =>
                           handleSubCategory(
                             subChildren._id,
-                            showingTranslateValue(subChildren?.name)
+                            showingTranslateValue(subChildren?.name),
                           )
                         }
-                        className="flex items-center font-serif py-1 text-sm text-gray-600 hover:text-yellow-600 cursor-pointer transition-colors"
+                        className="flex items-center font-serif py-2 text-[13px] font-medium text-gray-600 hover:text-yellow-600 cursor-pointer transition-colors"
                       >
-                        <span className="text-xs text-gray-600 pr-2">
+                        <span className="text-xs text-gray-500 pr-2">
                           <IoRemoveSharp />
                         </span>
                         {showingTranslateValue(subChildren?.name)}
