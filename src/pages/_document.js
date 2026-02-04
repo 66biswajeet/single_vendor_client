@@ -35,7 +35,7 @@ class MyDocument extends Document {
             property="og:title"
             content={
               setting?.meta_title ||
-              "InfotechIndia - React Grocery & Organic Food Store e-commerce Template"
+              "StickersRhino - Custom Stickers, Labels, Decals & More Online Store"
             }
           />
           <meta property="og:type" content="eCommerce Website" />
@@ -43,7 +43,7 @@ class MyDocument extends Document {
             property="og:description"
             content={
               setting?.meta_description ||
-              "React Grocery & Organic Food Store e-commerce Template"
+              "StickersRhino - Custom Stickers, Labels, Decals & More Online Store"
             }
           />
           <meta
@@ -52,15 +52,13 @@ class MyDocument extends Document {
           />
           <meta
             property="og:url"
-            content={
-              setting?.meta_url || "https://InfotechIndia-store.vercel.app/"
-            }
+            content={setting?.meta_url || "https://stickersrhino.com/"}
           />
           <meta
             property="og:image"
             content={
               setting?.meta_img ||
-              "https://res.cloudinary.com/ahossain/image/upload/v1636729752/facebook-page_j7alju.png"
+              "https://res.cloudinary.com/de4q84ga3/image/upload/v1769362173/undefined/hro.jpg"
             }
           />
         </Head>
