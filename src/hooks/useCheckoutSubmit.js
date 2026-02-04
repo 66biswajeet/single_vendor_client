@@ -326,7 +326,7 @@ const useCheckoutSubmit = (storeSetting) => {
         key: storeSetting?.razorpay_id,
         amount,
         currency,
-        name: "InfotechIndia Store",
+        name: "stickersrhino Store",
         description: "This is the total cost of your purchase",
         order_id: id,
         handler: async (response) => {

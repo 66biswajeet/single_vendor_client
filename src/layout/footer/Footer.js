@@ -508,14 +508,14 @@ const Footer = () => {
                         storeCustomizationSetting?.footer?.block1_sub_title1
                       }
                     />
-                  </Link>
-                </li>
-                <li className="flex items-baseline transform transition-transform duration-300 hover:translate-x-2">
-                  <span className="text-yellow-400 mr-2 flex-shrink-0">→</span>
-                  <Link
-                    href={`${storeCustomizationSetting?.footer?.block1_sub_link2}`}
-                    className="!text-white inline-block w-full hover:!text-yellow-400 visited:!text-white active:!text-yellow-400 transition-colors duration-300"
-                  >
+                    <Link
+                      href="https://stickersrhino.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-black font-semibold hover:text-gray-700"
+                    >
+                      stickersrhino
+                    </Link>
                     <CMSkeleton
                       count={1}
                       height={10}
@@ -533,7 +533,7 @@ const Footer = () => {
                     className="!text-white inline-block w-full hover:!text-yellow-400 visited:!text-white active:!text-yellow-400 transition-colors duration-300"
                   >
                     {showingTranslateValue(
-                      storeCustomizationSetting?.footer_block_one_link_three_title
+                      storeCustomizationSetting?.footer_block_one_link_three_title,
                     )}
                     <CMSkeleton
                       count={1}

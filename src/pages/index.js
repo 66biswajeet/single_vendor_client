@@ -249,13 +249,33 @@ export const getServerSideProps = async (context) => {
     "public, s-maxage=60, stale-while-revalidate=120",
   );
 
-  const [data, attributes] = await Promise.all([
-    ProductServices.getShowingStoreProducts({
-      category: _id || "",
-      title: query || "",
-    }),
-    AttributeServices.getShowingAttributes(),
-  ]);
+  let data = {
+    popularProducts: [],
+    discountedProducts: [],
+    trendingProducts: [],
+    bestsellerProducts: [],
+  };
+  let attributes = [];
+
+  try {
+    const results = await Promise.all([
+      ProductServices.getShowingStoreProducts({
+        category: _id || "",
+        title: query || "",
+      }),
+      AttributeServices.getShowingAttributes(),
+    ]);
+    data = results[0] || data;
+    attributes = results[1] || attributes;
+  } catch (err) {
+    // Log and continue with safe defaults so page rendering does not crash
+    // during transient API failures or misconfiguration on the server.
+    // eslint-disable-next-line no-console
+    console.error(
+      "getServerSideProps: failed to fetch products/attributes",
+      err,
+    );
+  }
 
   // Fetch store customization so we can server-preload hero image
   let heroImage = null;

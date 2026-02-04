@@ -5,21 +5,31 @@ import { DefaultSeo as NextSeo } from "next-seo";
 import useGetSetting from "@hooks/useGetSetting";
 
 const DefaultSeo = () => {
-  const { globalSetting } = useGetSetting();
+  const { globalSetting, storeCustomizationSetting } = useGetSetting();
+
+  const seo = storeCustomizationSetting?.seo || globalSetting || {};
 
   return (
     <NextSeo
       title={
+        seo?.meta_title ||
         globalSetting?.meta_title ||
-        "InfotechIndia - React Grocery & Organic Food Store e-commerce Template"
+        "StickersRhino - Custom Stickers & Decals Online"
       }
+      description={seo?.meta_description || globalSetting?.meta_description}
+      canonical={seo?.meta_url || globalSetting?.meta_url}
       openGraph={{
         type: "website",
         locale: "en_IE",
-        url: globalSetting?.meta_url || "https://InfotechIndia-store.vercel.app/",
+        url:
+          seo?.meta_url ||
+          globalSetting?.meta_url ||
+          "https://stickersrhino.com/",
         site_name:
+          seo?.meta_title ||
           globalSetting?.meta_title ||
-          "InfotechIndia - React Grocery & Organic Food Store e-commerce Template",
+          "StickersRhino - Custom Stickers & Decals Online",
+        images: seo?.meta_img ? [{ url: seo.meta_img }] : [],
       }}
       twitter={{
         handle: "@handle",
@@ -50,6 +60,7 @@ const DefaultSeo = () => {
           rel: "manifest",
           href: "/manifest.json",
         },
+        // favicon handled in Layout head as well, keep defaults here
       ]}
     />
   );

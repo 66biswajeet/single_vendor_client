@@ -1,4 +1,5 @@
 import Head from "next/head";
+import useGetSetting from "@hooks/useGetSetting";
 import dynamic from "next/dynamic";
 import { ToastContainer } from "react-toastify";
 
@@ -14,6 +15,7 @@ const CookieBanner = dynamic(() => import("@components/common/CookieBanner"), {
 });
 
 const Layout = ({ title, description, children }) => {
+  const { storeCustomizationSetting } = useGetSetting();
   return (
     <>
       <ToastContainer />
@@ -22,11 +24,22 @@ const Layout = ({ title, description, children }) => {
         <Head>
           <title>
             {title
-              ? `StickersRhino | ${title}`
-              : "StickersRhino - Custom Stickers & Decals Online"}
+              ? `${storeCustomizationSetting?.seo?.meta_title ? storeCustomizationSetting.seo.meta_title + " | " : "StickersRhino | "}${title}`
+              : storeCustomizationSetting?.seo?.meta_title ||
+                "StickersRhino - Custom Stickers & Decals Online"}
           </title>
-          {description && <meta name="description" content={description} />}
-          <link rel="icon" href="/favicon.png" />
+          <meta
+            name="description"
+            content={
+              description ||
+              storeCustomizationSetting?.seo?.meta_description ||
+              ""
+            }
+          />
+          <link
+            rel="icon"
+            href={storeCustomizationSetting?.seo?.favicon || "/favicon.png"}
+          />
         </Head>
         {/* <NavBarTop /> */}
         <Navbar />
