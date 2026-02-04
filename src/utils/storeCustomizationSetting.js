@@ -881,12 +881,13 @@ export const storeCustomization = {
   seo: {
     favicon:
       "https://res.cloudinary.com/ahossain/image/upload/v1700903173/undefined/favicon.png",
-    meta_description: "React Grocery & Organic Food Store e-commerce Template",
+    meta_description:
+      "StickersRhino - Custom Stickers, Labels, Decals & More Online Store",
     meta_img:
-      "https://res.cloudinary.com/ahossain/image/upload/v1636729752/facebook-page_j7alju.png",
+      "https://res.cloudinary.com/de4q84ga3/image/upload/v1769362173/undefined/hro.jpg",
     meta_keywords: "e-commerce, online store",
     meta_title:
-      "InfotechIndia - React Grocery & Organic Food Store e-commerce Template",
-    meta_url: "https://InfotechIndia-store-nine.vercel.app/",
+      "StickersRhino - Custom Stickers, Labels, Decals & More Online Store",
+    meta_url: "https://stickersrhino.com/",
   },
 };
