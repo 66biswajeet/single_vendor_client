@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import SettingServices from "@services/SettingServices";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
@@ -21,6 +22,8 @@ const PhoneSignin = () => {
   const redirectUrl = useSearchParams().get("redirectUrl");
 
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [countryCodes, setCountryCodes] = useState([]);
+  const [selectedCountryCode, setSelectedCountryCode] = useState("+");
   const [otp, setOtp] = useState("");
   const [step, setStep] = useState(1); // 1: Enter phone, 2: Enter OTP
   const [loading, setLoading] = useState(false);
@@ -28,6 +31,20 @@ const PhoneSignin = () => {
   const [recaptchaInitialized, setRecaptchaInitialized] = useState(false);
 
   useEffect(() => {
+    // fetch available country codes from store settings
+    (async () => {
+      try {
+        const settings = await SettingServices.getStoreSetting();
+        const codes = settings?.phone_country_codes || [];
+        setCountryCodes(codes);
+        if (codes && codes.length > 0) {
+          setSelectedCountryCode(codes[0].code || "+");
+        }
+      } catch (err) {
+        // ignore
+      }
+    })();
+
     // Initialize reCAPTCHA when component mounts
     if (step === 1 && !recaptchaInitialized) {
       const initRecaptcha = async () => {
@@ -64,23 +81,24 @@ const PhoneSignin = () => {
     setLoading(true);
 
     try {
-      // Validate phone number format
-      if (!phoneNumber.startsWith("+")) {
-        notifyError(
-          "Phone number must include country code (e.g., +1234567890)",
-        );
+      // Compose full phone number using selected country code + phoneNumber
+      const raw = phoneNumber.replace(/^\+/, "").replace(/\s+/g, "");
+      const fullPhone = selectedCountryCode + raw;
+
+      if (!fullPhone.startsWith("+")) {
+        notifyError("Phone number must include country code (e.g., +1234567890)");
         setLoading(false);
         return;
       }
 
-      if (phoneNumber.length < 10) {
+      if (raw.length < 6) {
         notifyError("Please enter a valid phone number");
         setLoading(false);
         return;
       }
 
       // Send OTP via Firebase
-      const result = await sendOTP(phoneNumber, window.recaptchaVerifier);
+      const result = await sendOTP(fullPhone, window.recaptchaVerifier);
       setConfirmationResult(result);
       setStep(2);
       notifySuccess("OTP sent successfully! Check your phone.");
@@ -240,15 +258,29 @@ const PhoneSignin = () => {
                           Phone Number (with country code)
                         </label>
                         <div className="relative">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <FiPhone className="h-5 w-5 text-gray-400" />
+                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center">
+                            <select
+                              value={selectedCountryCode}
+                              onChange={(e) => setSelectedCountryCode(e.target.value)}
+                              className="bg-transparent outline-none border-none text-sm"
+                            >
+                              {countryCodes && countryCodes.length > 0 ? (
+                                countryCodes.map((c, i) => (
+                                  <option key={i} value={c.code}>
+                                    {c.name} {c.code}
+                                  </option>
+                                ))
+                              ) : (
+                                <option value="+">+</option>
+                              )}
+                            </select>
                           </div>
                           <input
                             type="tel"
                             value={phoneNumber}
                             onChange={(e) => setPhoneNumber(e.target.value)}
-                            placeholder="+1234567890"
-                            className="w-full pl-10 pr-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-yellow-400 transition-colors"
+                            placeholder="1234567890"
+                            className="w-full pl-36 pr-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-yellow-400 transition-colors"
                             required
                           />
                         </div>
