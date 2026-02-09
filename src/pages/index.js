@@ -25,13 +25,13 @@ import ProductServices from "@services/ProductServices";
 import AttributeServices from "@services/AttributeServices";
 
 const SectionTitle = ({ title, description, loading, error }) => (
-  <div className="text-center w-full lg:w-2/5 mx-auto mb-12">
-    <h2 className="text-3xl lg:text-4xl mb-3 font-bold tracking-tight text-black relative inline-block">
+  <div className="text-center w-full lg:w-2/5 mx-auto mb-8 sm:mb-12 px-2">
+    <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-3 font-bold tracking-tight text-black relative inline-block">
       <CMSkeleton count={1} height={36} loading={loading} data={title} />
       <div className="absolute -bottom-1 left-0 right-0 h-1 bg-yellow-400 rounded-full"></div>
     </h2>
 
-    <p className="text-base font-medium text-gray-700 leading-relaxed mt-4">
+    <p className="text-sm sm:text-base font-medium text-gray-700 leading-relaxed mt-3 sm:mt-4 px-2">
       <CMSkeleton
         count={4}
         height={10}
@@ -226,7 +226,7 @@ const Home = ({
                 />
               ) : (
                 <div className="text-center py-12">
-                  <p className="text-gray-500 text-lg">
+                  <p className="text-gray-500 text-sm sm:text-base lg:text-lg px-4">
                     No discounted products available at the moment
                   </p>
                 </div>

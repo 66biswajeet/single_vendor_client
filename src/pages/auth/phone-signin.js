@@ -400,6 +400,7 @@ const PhoneSignin = () => {
                   </form>
                 )}
 
+                {/*
                 <div className="flex flex-col items-center justify-center mt-6 mb-2">
                   <div className="text-sm text-center text-gray-600">
                     <span>Or sign in with </span>
@@ -420,6 +421,7 @@ const PhoneSignin = () => {
                     </Link>
                   </div>
                 </div>
+                */}
               </div>
             </div>
           </div>

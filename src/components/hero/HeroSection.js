@@ -86,27 +86,27 @@ const HeroSection = ({ serverHeroImage = null }) => {
       <div className="max-w-screen-2xl mx-auto">
         <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 items-center min-h-[400px] md:min-h-[500px]">
           {/* Left Side - Text Content */}
-          <div className="px-6 md:px-10 lg:px-12 py-8 md:py-12 order-2 lg:order-1">
-            <h1 className="text-2xl sm:text-xl md:text-5xl lg:text-4x font-medium text-gray-900 mb-4 md:mb-6 leading-tight">
+          <div className="px-4 sm:px-6 md:px-10 lg:px-12 py-6 sm:py-8 md:py-12 order-2 lg:order-1">
+            <h1 className="text-lg sm:text-2xl md:text-4xl lg:text-5xl font-medium text-gray-900 mb-3 sm:mb-4 md:mb-6 leading-tight">
               {renderWithBoldMarkers(
                 heroData.mainTitle ||
                   "Create Custom Stickers, Labels, Decals & More",
               )}
             </h1>
-            <p className="text-base md:text-lg text-gray-700 mb-6 md:mb-8 leading-relaxed">
+            <p className="text-sm sm:text-base md:text-lg text-gray-700 mb-4 sm:mb-6 md:mb-8 leading-relaxed">
               {heroData.description ||
                 "Easily create & print custom products for your business, brand, and beyond. Order in any size, die-cut shape, and quantity."}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <Link
                 href={heroData.button1Link || "#"}
-                className="inline-flex items-center justify-center px-8 py-3 text-base font-semibold text-black bg-yellow-400 rounded-full hover:bg-yellow-500 transition-all shadow-lg hover:shadow-xl active:scale-95 border-2 border-yellow-500"
+                className="inline-flex items-center justify-center px-5 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-black bg-yellow-400 rounded-full hover:bg-yellow-500 transition-all shadow-lg hover:shadow-xl active:scale-95 border-2 border-yellow-500"
               >
                 {heroData.button1Text || "Create Now"} →
               </Link>
               <Link
                 href={heroData.button2Link || "#"}
-                className="inline-flex items-center justify-center px-8 py-3 text-base font-semibold text-black bg-white border-2 border-yellow-400 rounded-full hover:bg-yellow-50 transition-all shadow-md hover:shadow-lg active:scale-95"
+                className="inline-flex items-center justify-center px-5 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base font-semibold text-black bg-white border-2 border-yellow-400 rounded-full hover:bg-yellow-50 transition-all shadow-md hover:shadow-lg active:scale-95"
               >
                 {heroData.button2Text || "Get A Quote"}
               </Link>

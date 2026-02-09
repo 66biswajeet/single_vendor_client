@@ -484,15 +484,11 @@ const Navbar = () => {
 
                 <div className="space-y-2">
                   <MobileMenuLink href="/" text="Home" />
-                  <MobileMenuLink href="/products" text="Shop" />
-                  <MobileMenuLink href="/about" text="About" />
-                  <button
-                    className="w-full text-left px-4 py-3 rounded-lg text-white hover:bg-gray-800 hover:text-yellow-400 transition-all flex items-center space-x-2"
-                    aria-label="Notifications"
-                  >
-                    <FiBell className="w-5 h-5" />
-                    <span>Notifications</span>
-                  </button>
+                  <MobileMenuLink
+                    href="http://localhost:3000/search?category=custom-stickers&_id=696d94aa23ec812e339bfa90"
+                    text="Shop"
+                  />
+                  {/* Removed About and Notifications from mobile menu per request */}
                 </div>
               </div>
             </div>
